@@ -1,0 +1,79 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #e5fbf4;
+}
+
+h1,
+h2,
+h4 {
+    color: #185040;
+}
+
+/* Navigation Bar Styling */
+.navbar-custom {
+    background-color: #34bc91;
+}
+
+/* Button Styling */
+.btn-success {
+    background-color: #34bc91;
+    border-color: #34bc91;
+}
+
+.btn-success:hover {
+    background-color: #288e6e;
+    border-color: #288e6e;
+}
+
+/* Form Container Styling */
+.form-card {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Input & Select Fields */
+.form-card input,
+.form-card select,
+.form-card textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 0.5rem;
+    border: 1px solid #D3D3D3;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+/* Labels */
+.form-card label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+    color: #185040;
+}
+
+/* Submit Button */
+.form-card button {
+    border-radius: 0.5rem;
+    font-weight: bold;
+    background-color: #34bc91;
+    border-color: #34bc91;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.form-card button:hover {
+    background-color: #288e6e;
+    border-color: #288e6e;
+}
+
+/* Error messages */
+.form-card .text-danger {
+    font-size: 0.9rem;
+    margin-top: 2px;
+}
