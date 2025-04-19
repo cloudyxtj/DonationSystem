@@ -1,0 +1,16 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>My Donations</h2>
+    <ul class="list-group">
+        {% for donation in donations %}
+        <li class="list-group-item">
+            <strong>{{ donation.title }}</strong> - {{ donation.quantity }} - {{ donation.status }}
+        </li>
+        {% empty %}
+        <li class="list-group-item">You haven't donated anything yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

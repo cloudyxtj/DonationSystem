@@ -1,0 +1,14 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Home - Share a Spoon{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="fw-bold">Share a Spoon,<br>Share a Smile.</h1>
+    <p class="lead mt-3">Share your abundance and feed someone in need.</p>
+    <div class="mt-4">
+        <a href="#" class="btn btn-success me-3">Donate Now</a>
+        <a href="{% url 'user:signup' %}" class="btn btn-outline-success">Sign Up</a>
+    </div>
+</div>
+{% endblock %}
