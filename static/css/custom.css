@@ -9,11 +9,6 @@ h4 {
     color: #185040;
 }
 
-/* Navigation Bar Styling */
-.navbar-custom {
-    background-color: #34bc91;
-}
-
 /* Button Styling */
 .btn-success {
     background-color: #34bc91;
@@ -23,6 +18,60 @@ h4 {
 .btn-success:hover {
     background-color: #288e6e;
     border-color: #288e6e;
+}
+
+/* Main content */
+.main-content {
+    margin-top: 100px;
+    width: 100%;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: #34bc91;
+    height: 65px;
+}
+
+.navbar-nav  {
+    background-color: #34bc91;
+}
+
+.nav-item {
+    margin-left: 1rem;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    width: 220px;
+    height: 100%;
+    background-color: #185040;
+    color: white;
+    padding-top: 1rem;
+    transition: transform 0.3s ease;
+    z-index: 1050;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar a i {
+    margin-right: 10px;
+}
+
+.sidebar a:hover {
+    background-color: #288e6e;
 }
 
 /* Form Container Styling */
@@ -64,7 +113,6 @@ h4 {
     color: white;
     padding: 10px;
     width: 100%;
-    transition: background-color 0.3s ease;
 }
 
 .form-card button:hover {
@@ -76,4 +124,10 @@ h4 {
 .form-card .text-danger {
     font-size: 0.9rem;
     margin-top: 2px;
+}
+
+.fixed-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
