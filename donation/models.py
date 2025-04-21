@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+image = models.ImageField(upload_to='donation/', blank=True, null=True)
+
 class Donation(models.Model):
     STATUS = [
         ('available', 'Available'),
