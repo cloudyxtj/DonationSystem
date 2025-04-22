@@ -1,11 +1,11 @@
 <div class="sidebar">
     <div class="sidebar-links">
-        {% if is_donor %}
+        {% if user.role == 'Donor' %}
         <a href="{% url 'donation:donate_food' %}"><i class="bi bi-box-seam"></i> Donate</a>
         <a href="{% url 'donation:donation_list' %}"><i class="bi bi-clock-history"></i> Donation</a>
-        {% elif is_recipient %}
+        {% elif user.role == 'Recipient' %}
         <a href="#"><i class="bi bi-basket2"></i> Browse Donation</a>
-        {% elif is_driver %}
+        {% elif user.role == 'Driver' %}
         <a href="#"><i class="bi bi-truck"></i> Delivery</a>
         {% elif user.is_superuser %}
         <a href="/admin/"><i class="bi bi-tools"></i> Admin</a>
