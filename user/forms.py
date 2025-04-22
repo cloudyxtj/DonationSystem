@@ -1,9 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from .models import User  # Your custom user model
 
 class UserSignupForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    phone_no = forms.CharField(max_length=13, required=True)
     
     ROLE = [
         ('Donor', 'Donor'),
@@ -14,4 +15,4 @@ class UserSignupForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'role']
+        fields = ['username', 'email', 'phone_no', 'password1', 'password2', 'role']
