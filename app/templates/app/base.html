@@ -20,8 +20,9 @@
         <div class="container-fluid">
             <!-- Sidebar Toggle Icon -->
             {% if user.is_authenticated %}
-            <button class="btn text-white me-3" onclick="toggleSidebar()">
-                <i class="bi bi-list fs-3"></i>
+            <button class="btn btn-success m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"
+                aria-controls="sidebarMenu">
+                &#9776;
             </button>
             {% endif %}
 
@@ -66,14 +67,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
-    <script>
+    <!-- <script>
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.querySelector('.main-content');
             sidebar.classList.toggle('collapsed');
             // mainContent.classList.toggle('shifted');
         }
-    </script>
+    </script> -->
 
 </body>
 

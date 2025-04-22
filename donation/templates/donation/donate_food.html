@@ -1,24 +1,22 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-<div class="container">
-    <div class="form-card">
-        <h2>Donate Food</h2>
-        <form method="post">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="mb-2">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                <div class="text-danger">
-                    {{ field.errors|striptags }}
-                </div>
-                {% endif %}
+<div class="form-card">
+    <h2>Donate Food</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="mb-2">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div class="text-danger">
+                {{ field.errors|striptags }}
             </div>
-            {% endfor %}
-            <button class="btn btn-success mt-3" type="submit">Submit Donation</button>
-        </form>
-    </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button class="btn btn-success mt-3" type="submit">Submit Donation</button>
+    </form>
 </div>
 {% endblock %}

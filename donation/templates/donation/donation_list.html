@@ -2,9 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">Donations</h2>
-
+    <h2 class>Donations</h2>
     {% if donations %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
         {% for donation in donations %}
@@ -23,7 +21,6 @@
             </div>
         </div>
         {% endfor %}
-    </div>
     {% else %}
     <div class="alert alert-info">You haven't donated anything yet.</div>
     {% endif %}

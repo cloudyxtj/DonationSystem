@@ -22,8 +22,11 @@ h4 {
 
 /* Main content */
 .main-content {
-    margin-top: 100px;
-    width: 100%;
+    margin-top: 65px;
+    padding: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Navbar */
@@ -40,38 +43,27 @@ h4 {
     margin-left: 1rem;
 }
 
-/* Sidebar */
-.sidebar {
-    position: fixed;
-    top: 65px;
-    left: 0;
-    width: 220px;
-    height: 100%;
+/* Custom Offcanvas Background */
+.offcanvas-custom {
     background-color: #185040;
     color: white;
-    padding-top: 1rem;
-    transition: transform 0.3s ease;
-    z-index: 1050;
 }
 
-.sidebar.collapsed {
-    transform: translateX(-100%);
+/* Offcanvas Header */
+.offcanvas-custom .offcanvas-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.sidebar a {
+/* Links inside Offcanvas */
+.offcanvas-custom .nav-link {
     color: white;
-    text-decoration: none;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
+    padding: 10px 20px;
 }
 
-.sidebar a i {
-    margin-right: 10px;
-}
-
-.sidebar a:hover {
+.offcanvas-custom .nav-link:hover {
     background-color: #288e6e;
+    border-radius: 0.5rem;
+    text-decoration: none;
 }
 
 /* Form Container Styling */
