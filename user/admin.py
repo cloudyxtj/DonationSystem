@@ -4,8 +4,8 @@ from .models import User, Donor, Recipient, Driver
 
 class UserAdmin(BaseUserAdmin):
     model = User
-    list_display = ('username', 'email', 'role', 'is_staff', 'is_active')
-    list_filter = ('role', 'is_staff', 'is_active')
+    list_display = ('username', 'email', 'role', 'is_staff')
+    list_filter = ('role', 'is_staff')
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password', 'role', 'phone_no')}),
         ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions')}),

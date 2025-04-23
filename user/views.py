@@ -25,7 +25,7 @@ class MyLoginView(LoginView):
         if user.role == 'Donor':
             return reverse_lazy('donation:donate_food')
         elif user.role == 'Recipient':
-            return reverse_lazy('donation:donation_list')
+            return reverse_lazy('donation:my_donation')
         elif user.role == 'Driver':
             return reverse_lazy('#')  # Example
         elif user.is_superuser:
