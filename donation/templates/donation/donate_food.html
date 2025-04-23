@@ -3,7 +3,7 @@
 {% block content %}
 <div class="form-card">
     <h2>Donate Food</h2>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
         <div class="mb-2">

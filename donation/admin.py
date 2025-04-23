@@ -3,6 +3,6 @@ from .models import Donation
 
 @admin.register(Donation)
 class DonationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'donor', 'quantity', 'status', 'expiry_date', 'created_at')
-    list_filter = ('status', 'donor')
-    search_fields = ('title', 'description', 'donor__username')
+    list_display = ('title', 'status', 'quantity', 'expiry_date', 'location')
+    list_filter = ('status', 'expiry_date')
+    search_fields = ('title', 'location')
