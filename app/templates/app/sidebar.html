@@ -1,4 +1,4 @@
-<div class="offcanvas offcanvas-start offcanvas-custom" tabindex="-1" id="sidebarMenu"
+<div class="offcanvas offcanvas-start offcanvas-custom" data-bs-scroll="true" tabindex="-1" id="sidebarMenu"
     aria-labelledby="sidebarMenuLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="sidebarMenuLabel">Menu</h5>
@@ -7,13 +7,15 @@
     <div class="offcanvas-body">
         {% if user.role == 'Donor' %}
         <a class="nav-link" href="{% url 'donation:donate_food' %}"><i class="bi bi-box-seam"></i> Donate</a>
-        <a class="nav-link" href="{% url 'donation:donation_list' %}"><i class="bi bi-clock-history"></i> Donations</a>
+        <a class="nav-link" href="{% url 'donation:my_donation' %}"><i class="bi bi-clock-history"></i> My Donations</a>
+        <a class="nav-link" href="{% url 'donation:view_donation' %}"><i class="bi bi-box2-heart"></i> All Donations</a>
         {% elif user.role == 'Recipient' %}
         <a class="nav-link" href="#"><i class="bi bi-basket2"></i> Browse Donation</a>
         {% elif user.role == 'Driver' %}
         <a class="nav-link" href="#"><i class="bi bi-truck"></i> Delivery</a>
         {% elif user.is_superuser %}
-        <a class="nav-link" href="/admin/"><i class="bi bi-tools"></i> Admin</a>
+        <a class="nav-link" href="/admin/"><i class="bi bi-universal-access"></i> Admin</a>
+        <a class="nav-link" href="{% url 'donation:view_donation' %}"><i class="bi bi-box2-heart"></i> All Donations</a>
         {% endif %}
     </div>
 </div>
