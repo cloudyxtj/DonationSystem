@@ -1,0 +1,30 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">🚚 Welcome, Driver!</h1>
+
+    {% if deliveries %}
+    <div class="row">
+        {% for delivery in deliveries %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-primary">
+                <div class="card-body">
+                    <h5 class="card-title">{{ delivery.foodName }}</h5>
+                    <p class="card-text"><strong>Status:</strong> {{ delivery.status }}</p>
+                    <p class="card-text"><strong>Pickup:</strong> {{ delivery.pickup_time }}</p>
+                    <p class="card-text"><strong>Recipient:</strong> {{ delivery.recipient.username }}</p>
+                    <a href="{% url 'delivery_detail' delivery.deliveryID %}" class="btn btn-primary">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">No deliveries assigned yet.</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Delivery Detail</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+
+<body class="p-4">
+
+    <div class="container">
+        <h2>Delivery ID: {{ delivery.deliveryID }}</h2>
+        <p><strong>Food:</strong> {{ delivery.foodName }}</p>
+        <p><strong>Status:</strong> {{ delivery.status }}</p>
+        <p><strong>Delivery Time:</strong> {{ delivery.delivery_time }}</p>
+        {% if delivery.proof %}
+        <p><strong>Proof of Delivery:</strong></p>
+        <img src="{{ delivery.proof.url }}" class="img-fluid rounded" width="300">
+        {% endif %}
+
+        <a href="{% url 'mark_delivered' delivery.deliveryID %}" class="btn btn-success mt-3">Mark as Delivered</a>
+    </div>
+
+</body>
+
+</html>
