@@ -35,7 +35,7 @@ h4 {
     height: 65px;
 }
 
-.navbar-nav  {
+.navbar-nav {
     background-color: #34bc91;
 }
 
@@ -118,6 +118,7 @@ h4 {
     margin-top: 2px;
 }
 
+/* Image Styling */
 .fixed-image {
     width: 100%;
     height: auto;

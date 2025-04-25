@@ -2,6 +2,14 @@
 {% load static %}
 
 {% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'donation:view_donation' %}">All Donations</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ donation.food_name }}</li>
+    </ol>
+</nav>
+
 <div class="container my-5">
     <div class="card shadow-lg rounded-4 border-0">
         <div class="row g-0">
@@ -28,9 +36,9 @@
                 {% endif %}
 
                 <div class="mt-4">
-                    <a href="{% url 'donation:view_donation' %}" class="btn btn-outline-primary rounded-pill px-4 py-2">
-                        ← Back to All Donations
-                    </a>
+                    {% if user.is_authenticated and user.recipient %}
+                    <a href="{% url 'donation:make_request' pk=donation.pk %}" class="btn btn-success">Make Request</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

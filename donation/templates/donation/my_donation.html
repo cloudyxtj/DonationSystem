@@ -2,31 +2,39 @@
 {% load static %}
 
 {% block content %}
-    <h2 class>My Donations</h2>
-    {% if donations %}
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-        {% for donation in donations %}
-        <div class="col">
-            <div class="card h-100">
-                {% if donation.image %}
-                <img src="{{ donation.image.url }}" class="card-img-top fixed-image" alt="{{ donation.food_name }}">
-                {% else %}
-                <img src="{% static 'images/icon.png' %}" class="card-img-top fixed-image" alt="No Image">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a href="{% url 'donation:donation_detail' donation.pk %}" class="text-decoration-none">
-                            {{ donation.food_name }}
-                        </a>
-                    </h5>
-                    <p class="card-text">Quantity: {{ donation.quantity }}</p>
-                    <p class="card-text">Status: {{ donation.status }}</p>
-                </div>
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">My Donations</li>
+    </ol>
+</nav>
+
+<h2>My Donations</h2>
+
+{% if donations %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    {% for donation in donations %}
+    <div class="col">
+        <div class="card h-100">
+            {% if donation.image %}
+            <img src="{{ donation.image.url }}" class="card-img-top fixed-image" alt="{{ donation.food_name }}">
+            {% else %}
+            <img src="{% static 'images/icon.png' %}" class="card-img-top fixed-image" alt="No Image">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{% url 'donation:donation_detail' donation.pk %}" class="text-decoration-none">
+                        {{ donation.food_name }}
+                    </a>
+                </h5>
+                <p class="card-text">Quantity: {{ donation.quantity }}</p>
+                <p class="card-text">Status: {{ donation.status }}</p>
             </div>
         </div>
-        {% endfor %}
-    {% else %}
-    <div class="alert alert-info">You haven't donated anything yet.</div>
-    {% endif %}
+    </div>
+    {% endfor %}
 </div>
+{% else %}
+<div class="alert alert-info">You haven't donated anything yet.</div>
+{% endif %}
 {% endblock %}

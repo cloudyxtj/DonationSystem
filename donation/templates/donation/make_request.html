@@ -1,0 +1,116 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Make Food Donation Request{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-11">
+            <div class="form-card">
+                <h2 class="text-center mb-4">Request Food Donation</h2>
+                
+                <!-- Food Donation Details -->
+                <div class="mb-4">
+                    <h4>Food Donation Details</h4>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ donation.food_name }}</h5>
+                            <p class="card-text"><strong>Category:</strong> {{ donation.category }}</p>
+                            <p class="card-text"><strong>Quantity:</strong> {{ donation.quantity }}</p>
+                            <p class="card-text"><strong>Expiry Date:</strong> {{ donation.expiry_date }}</p>
+                            {% if donation.description %}
+                            <p class="card-text"><strong>Description:</strong> {{ donation.description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Form -->
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="delivery_type" class="form-label">Delivery Type</label>
+                        <select class="form-select" id="delivery_type" name="delivery_type" required>
+                            <option value="" selected disabled>Select delivery type</option>
+                            <option value="pickup">Pick Up</option>
+                            <option value="delivery">Delivery</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="2" required
+                            placeholder="Enter your delivery address"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="contact_number" class="form-label">Contact Number</label>
+                        <input type="tel" class="form-control" id="contact_number" name="contact_number" required
+                            placeholder="Enter your contact number">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="preferred_time" class="form-label">Preferred Pick-up/Delivery Time</label>
+                        <input type="datetime-local" class="form-control" id="preferred_time" name="preferred_time" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="special_instructions" class="form-label">Special Instructions (Optional)</label>
+                        <textarea class="form-control" id="special_instructions" name="special_instructions" rows="2"
+                            placeholder="Any special instructions for pick-up or delivery"></textarea>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Submit Request</button>
+                        <a href="{% url 'donation:donation_detail' donation.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-card {
+        width: 100%;
+        margin: 40px auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 1rem;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-card h2, .form-card h4 {
+        color: #185040;
+    }
+
+    .form-card label {
+        color: #185040;
+        font-weight: 500;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #34bc91;
+        box-shadow: 0 0 0 0.2rem rgba(52, 188, 145, 0.25);
+    }
+
+    .btn-success {
+        background-color: #34bc91;
+        border-color: #34bc91;
+    }
+
+    .btn-success:hover {
+        background-color: #288e6e;
+        border-color: #288e6e;
+    }
+
+    .bg-light {
+        background-color: #e5fbf4 !important;
+    }
+</style>
+{% endblock %}
+
