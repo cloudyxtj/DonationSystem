@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import DonationForm
 from .models import Donation
 from django.contrib.auth.decorators import login_required
@@ -42,3 +42,19 @@ def view_donation(request):
     return render(request, 'donation/view_donation.html', {
         'donations': filter
     })
+    
+def donation_detail(request, pk):
+    donation = get_object_or_404(Donation, pk=pk)
+    return render(request, 'donation/donation_detail.html', {'donation': donation})
+
+def request_donation(request, donation_id):
+    donation = get_object_or_404(Donation, pk=donation_id)
+
+    if request.method == 'POST' and donation.recipient == request.user:
+        # Process the donation request here
+        donation.status = 'Requested'  # Example: mark the donation as requested
+        donation.save()
+
+        return redirect('donation:view_donation', donation_id=donation.id)
+
+    return redirect('donation:view_donation')
