@@ -6,20 +6,30 @@
     </div>
     <div class="offcanvas-body">
         {% if user.role == 'Donor' %}
-        <a class="nav-link" href="{% url 'donation:donate_food' %}"><i class="bi bi-box-seam"></i> Donate</a>
-        <a class="nav-link" href="{% url 'donation:my_donation' %}"><i class="bi bi-clock-history"></i> My Donations</a>
-        <a class="nav-link" href="{% url 'donation:view_donation' %}"><i class="bi bi-box2-heart"></i> All Donations</a>
+        <a class="nav-link" href="{% url 'donation:view_donation' %}"><i class="bi bi-search-heart"></i> Browse Donations</a>
+        <a class="nav-link" href="{% url 'donation:donate_food' %}"><i class="bi bi-plus-square"></i> New Donation</a>
+        <a class="nav-link" href="#"><i class="bi bi-envelope-open-heart"></i> Pending Requests</a>
+        <a class="nav-link" href="{% url 'donation:my_donation' %}"><i class="bi bi-box2-heart"></i> My Donations</a>
+
         {% elif user.role == 'Recipient' %}
-        <a class="nav-link" href="#"><i class="bi bi-basket2"></i> Browse Donation</a>
+        <a class="nav-link" href="{% url 'donation:view_donation' %}"><i class="bi bi-search-heart"></i> Browse Donations</a>
+        <a class="nav-link" href="#"><i class="bi bi-geo-alt"></i> Track Request</a>
+        <a class="nav-link" href="#"><i class="bi bi-clock-history"></i> My Requests</a>
+        
         {% elif user.role == 'Driver' %}
         <a class="nav-link" href="{% url 'delivery:driver_dashboard' %}"><i class="bi bi-clock-history"></i> Driver Dashboard</a>
         <!-- {% if delivery %}
         <a class="nav-link" href="{% url 'delivery_detail' delivery.deliveryID %}">View Delivery</a>
         {% endif %} -->
+        
+        <a class="nav-link" href="#"><i class="bi bi-truck"></i> Available Deliveries</a>
+        <a class="nav-link" href="#"><i class="bi bi-geo-alt""></i> Track Delivery</a>
+        <a class="nav-link" href="#"><i class="bi bi-list-check"></i> My Deliveries</a>
+        
         {% elif user.role == 'Admin' %}
         {% elif user.is_superuser %}
         <a class="nav-link" href="/admin/"><i class="bi bi-universal-access"></i> Admin</a>
-        <a class="nav-link" href="{% url 'donation:view_donation' %}"><i class="bi bi-box2-heart"></i> All Donations</a>
+        <a class="nav-link" href="{% url 'donation:view_donation' %}"><i class="bi bi-search-heart"></i> Browse Donations</a> 
         {% endif %}
     </div>
 </div>
