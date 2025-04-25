@@ -14,7 +14,11 @@
                 <img src="{% static 'images/icon.png' %}" class="card-img-top fixed-image" alt="No Image">
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ donation.food_name }}</h5>
+                    <h5 class="card-title">
+                        <a href="{% url 'donation:donation_detail' donation.pk %}" class="text-decoration-none">
+                            {{ donation.food_name }}
+                        </a>
+                    </h5>
                     <p class="card-text">Quantity: {{ donation.quantity }}</p>
                     <p class="card-text">Status: {{ donation.status }}</p>
                 </div>

@@ -1,0 +1,39 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-lg rounded-4 border-0">
+        <div class="row g-0">
+
+            <!-- Image Section -->
+            <div class="col-md-6 d-flex align-items-center justify-content-center bg-light p-4 rounded-start">
+                {% if donation.image %}
+                <img src="{{ donation.image.url }}" alt="{{ donation.food_name }}" class="img-fluid rounded-4 shadow-sm"
+                    style="max-height: 350px;">
+                {% else %}
+                <img src="{% static 'images/icon.png' %}" alt="No image available" class="img-fluid rounded-4 shadow-sm"
+                    style="max-height: 350px;">
+                {% endif %}
+            </div>
+
+            <!-- Details Section -->
+            <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
+                <h2 class="fw-bold">{{ donation.food_name }}</h2>
+                <hr>
+                <p><strong>Quantity:</strong> {{ donation.quantity }}</p>
+                <p><strong>Expiry Date:</strong> {{ donation.expiry_date }}</p>
+                {% if donation.description %}
+                <p><strong>Description:</strong> {{ donation.description }}</p>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="{% url 'donation:view_donation' %}" class="btn btn-outline-primary rounded-pill px-4 py-2">
+                        ← Back to All Donations
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
