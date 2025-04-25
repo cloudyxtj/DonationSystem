@@ -43,7 +43,7 @@ class Donation(models.Model):
 
     # show what the donation looks like in the admin site --> Nasi Lemak
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.food_name}"
     
 class Request(models.Model):
     REQUEST_STATUS = [
