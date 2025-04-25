@@ -2,6 +2,13 @@
 {% load static %}
 
 {% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">All Donations</li>
+    </ol>
+</nav>
+
 <h2>All Donations</h2>
 
 <!-- Filter Form -->
@@ -40,3 +47,4 @@
 {% else %}
 <div class="alert alert-info">No donations available at the moment.</div>
 {% endif %}
+{% endblock %}
