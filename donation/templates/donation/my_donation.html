@@ -9,12 +9,12 @@
         <div class="col">
             <div class="card h-100">
                 {% if donation.image %}
-                <img src="{{ donation.image.url }}" class="card-img-top fixed-image" alt="{{ donation.title }}">
+                <img src="{{ donation.image.url }}" class="card-img-top fixed-image" alt="{{ donation.food_name }}">
                 {% else %}
                 <img src="{% static 'images/icon.png' %}" class="card-img-top fixed-image" alt="No Image">
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ donation.title }}</h5>
+                    <h5 class="card-title">{{ donation.food_name }}</h5>
                     <p class="card-text">Quantity: {{ donation.quantity }}</p>
                     <p class="card-text">Status: {{ donation.status }}</p>
                 </div>

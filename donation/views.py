@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import DonationForm
 from .models import Donation
 from django.contrib.auth.decorators import login_required
+from .strategy import FilterContext, ExpiryDateFilter, QuantityFilter
 
 @login_required
 def donate_food(request):
@@ -26,20 +27,18 @@ def my_donation(request):
 This view will display all available donations.
 """
 def view_donation(request):
-    donations = Donation.objects.all()
+    donations = Donation.objects.filter(status='available')
 
-    # Apply filters if provided
-    filter_expiry = request.GET.get('expiry_date')
-    filter_rating = request.GET.get('rating')
-    filter_quantity = request.GET.get('quantity')
+    filter_type = request.GET.get('filter')
+    if filter_type == 'expiry':
+        context = FilterContext(ExpiryDateFilter())
+    elif filter_type == 'quantity':
+        context = FilterContext(QuantityFilter())
+    else:
+        context = FilterContext(ExpiryDateFilter())  # default
 
-    if filter_expiry:
-        donations = donations.filter(expiry_date__lte=filter_expiry)
+    filter = context.apply_filter(donations)
 
-    if filter_rating:
-        donations = donations.filter(rating__gte=filter_rating)  # Assuming rating is a field in your model
-
-    if filter_quantity:
-        donations = donations.filter(quantity__gte=filter_quantity)
-
-    return render(request, 'donation/view_donation.html', {'donations': donations})
+    return render(request, 'donation/view_donation.html', {
+        'donations': filter
+    })
