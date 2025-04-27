@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import DonationForm
-from .models import Donation
+from .models import Donation, Request
 from django.contrib.auth.decorators import login_required
 from .strategy import FilterContext, ExpiryDateFilter, QuantityFilter
 
@@ -58,3 +58,23 @@ def request_donation(request, donation_id):
         return redirect('donation:view_donation', donation_id=donation.id)
 
     return redirect('donation:view_donation')
+
+@login_required
+def make_request(request, pk):
+    donation = get_object_or_404(Donation, pk=pk)
+    
+    if request.method == 'POST':
+        # Create a new request
+        new_request = Request.objects.create(
+            donation=donation,
+            recipient=request.user.recipient,
+            status='pending'
+        )
+        
+        # Update donation status
+        donation.status = 'reserved'
+        donation.save()
+        
+        return redirect('donation:view_donation')
+        
+    return render(request, 'donation/make_request.html', {'donation': donation})
