@@ -131,3 +131,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'user.User' # Custom user model
+
+LOGIN_URL = 'user:login'

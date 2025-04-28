@@ -1,6 +1,10 @@
 body {
+    height: 100%;
     font-family: 'Segoe UI', sans-serif;
     background-color: #e5fbf4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h1,
@@ -18,6 +22,11 @@ h4 {
 .btn-success:hover {
     background-color: #288e6e;
     border-color: #288e6e;
+}
+
+.btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
 }
 
 /* Main content */
@@ -123,4 +132,65 @@ h4 {
     width: 100%;
     height: auto;
     object-fit: cover;
+}
+
+/* Footer Styles */
+.footer {
+    margin-top: auto;
+    background-color: #185040 !important;
+}
+
+.footer h5 {
+    color: #ffffff;
+    margin-bottom: 1.2rem;
+}
+
+.footer .text-muted {
+    color: #b4b4b4 !important;
+}
+
+.footer .social-links a {
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.footer .social-links a:hover {
+    color: #34bc91 !important;
+}
+
+.footer ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer ul li a:hover {
+    color: #34bc91 !important;
+}
+
+/* Track request status */
+.status-badge {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.status-badge.pending {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.status-badge.approved {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.status-badge.denied {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.status-badge.completed {
+    background-color: #17a2b8;
+    color: #fff;
 }
