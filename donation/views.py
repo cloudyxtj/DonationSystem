@@ -1,6 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import DonationForm
-from .models import Donation
 from django.contrib.auth.decorators import login_required
 from .strategy import FilterContext, ExpiryDateFilter, QuantityFilter
 from django.http import HttpResponseForbidden
@@ -128,19 +126,93 @@ def track_request(request):
     return render(request, 'donation/track_request.html', {
         'requests': requests
     })
+
+@login_required
+def request_detail(request, pk):
+    """View for recipients to see details of a specific request."""
+    if request.user.role != 'Recipient':
+        return redirect('home')
     
-def donation_detail(request, pk):
-    donation = get_object_or_404(Donation, pk=pk)
-    return render(request, 'donation/donation_detail.html', {'donation': donation})
+    # Get the selected request
+    selected_request = get_object_or_404(
+        Request.objects.select_related('donation', 'donation__donor', 'donation__donor__user'),
+        pk=pk,
+        recipient=request.user.recipient
+    )
+    
+    # Get all requests for the list
+    requests = Request.objects.filter(
+        recipient=request.user.recipient
+    ).select_related('donation', 'donation__donor', 'donation__donor__user').order_by('-requested_at')
+    
+    return render(request, 'donation/track_request.html', {
+        'requests': requests,
+        'selected_request': selected_request
+    })
 
-def request_donation(request, donation_id):
-    donation = get_object_or_404(Donation, pk=donation_id)
+@login_required
+def my_request(request):
+    """View for recipients to see their requests with map integration."""
+    if request.user.role != 'Recipient':
+        return redirect('home')
+    
+    # Get all requests made by the recipient
+    requests = Request.objects.filter(
+        recipient=request.user.recipient
+    ).select_related('donation').order_by('-requested_at')
+    
+    return render(request, 'donation/my_request.html', {
+        'requests': requests
+    })
 
-    if request.method == 'POST' and donation.recipient == request.user:
-        # Process the donation request here
-        donation.status = 'Requested'  # Example: mark the donation as requested
-        donation.save()
+@login_required
+def mark_completed(request, pk):
+    request_to_mark = get_object_or_404(Request, pk=pk)
+    
+    if request.method == 'POST':
+        request_to_mark.status = 'completed'  # Mark the request as completed
+        request_to_mark.save()
+    
+        # Also update the related donation status to 'collected'
+        donation_to_update = request_to_mark.donation
+        donation_to_update.status = 'collected'  # Change donation status
+        donation_to_update.save()
 
-        return redirect('donation:view_donation', donation_id=donation.id)
+        return redirect('donation:request_detail', pk=request_to_mark.pk)  # Redirect to the request detail page
+    
+    return redirect('donation:track_request')
 
-    return redirect('donation:view_donation')
+@login_required
+def pending_request(request):
+    # Get all pending requests (for example, requests that are in 'pending' status)
+    pending_requests = Request.objects.filter(status='pending', donation__donor__user=request.user) # Follow the relation: Request -> Donation -> Donor -> User
+    return render(request, 'donation/pending_request.html', {'pending_requests': pending_requests})
+
+@login_required
+def update_request_status(request, pk):
+    # Retrieve the specific request by primary key (pk)
+    request_to_update = get_object_or_404(Request, pk=pk)
+    
+    # Handle form submission and status change
+    if request.method == 'POST':
+        new_status = request.POST.get('status')  # Get the status from the form
+
+        if new_status == 'denied':
+            # Mark the request as denied
+            request_to_update.status = 'denied'
+            request_to_update.save()
+
+            # Update the related donation's status to 'available'
+            donation_to_update = request_to_update.donation
+            donation_to_update.status = 'available'  # Change donation status to 'available'
+            donation_to_update.save()
+
+        elif new_status == 'approved':
+            # If the request is approved, just update the request status (no change to donation status)
+            request_to_update.status = 'approved'
+            request_to_update.save()
+        
+        return redirect('donation:pending_request')  # Redirect to the pending requests page
+
+    # If not a POST request, render the page (or redirect based on your logic)
+    return redirect('donation:pending_request')
