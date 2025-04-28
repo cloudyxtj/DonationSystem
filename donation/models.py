@@ -19,7 +19,7 @@ class Donation(models.Model):
         ('others', 'Others'),
     ]
     
-    donation_id = models.CharField(max_length=10, unique=True, blank=True)
+    donation_id = models.CharField(max_length=10, unique=True)
     donor = models.ForeignKey('user.Donor', on_delete=models.CASCADE)
     food_name = models.CharField(max_length=100)
     description = models.TextField()
@@ -27,7 +27,7 @@ class Donation(models.Model):
     quantity = models.PositiveIntegerField()
     expiry_date = models.DateField()
     address = models.TextField() 
-    status = models.CharField(max_length=20, choices=STATUS, default='available')
+    status = models.CharField(max_length=10, choices=STATUS, default='available')
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='donation/', blank=True, null=True)  
 
@@ -52,11 +52,18 @@ class Request(models.Model):
         ('denied', 'Denied'),
     ]
 
+    REQUEST_TYPE = [
+        ('delivery', 'Delivery'),
+        ('pickup', 'Self Pickup'),
+    ]
+
     request_id = models.CharField(max_length=10, unique=True)  
-    donation = models.ForeignKey(Donation, on_delete=models.CASCADE)  
+    donation = models.ForeignKey('donation.Donation', on_delete=models.CASCADE)  
     recipient = models.ForeignKey('user.Recipient', on_delete=models.CASCADE)  
+    request_type = models.CharField(max_length=10, choices=REQUEST_TYPE, default='pickup')
+    address = models.TextField(null=True, blank=True)  # address entered only when requesting
     requested_at = models.DateTimeField(auto_now_add=True) 
-    status = models.CharField(max_length=20, choices=REQUEST_STATUS, default='pending')
+    status = models.CharField(max_length=10, choices=REQUEST_STATUS, default='pending')
 
     def save(self, *args, **kwargs):
         if not self.request_id:
