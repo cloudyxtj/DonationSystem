@@ -1,0 +1,61 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Available Deliveries</li>
+    </ol>
+</nav>
+
+<div class="container">
+    <h2 class="mb-4">Available Deliveries</h2>
+
+    {% if available_requests %}
+    <div class="row">
+        {% for request in available_requests %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ request.donation.food_name }}</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Category:</strong> {{ request.donation.get_category_display }}</p>
+                            <p><strong>Quantity:</strong> {{ request.donation.quantity }}</p>
+                            <p><strong>Expiry Date:</strong> {{ request.donation.expiry_date|date:"F d, Y" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Donor:</strong> {{ request.donation.donor.user.username }}</p>
+                            <p><strong>Recipient:</strong> {{ request.recipient.user.username }}</p>
+                            <p><strong>Requested At:</strong> {{ request.requested_at|date:"F d, Y H:i" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">Location Details</h6>
+                            <p><strong>Pickup:</strong> {{ request.donation.address }}</p>
+                            <p><strong>Delivery:</strong> {{ request.address }}</p>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{% url 'delivery:accept_delivery' request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success w-100"
+                            onclick="return confirm('Are you sure you want to accept this delivery?')">
+                            <i class="bi bi-check-circle"></i> Accept Delivery
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> There are no available deliveries at the moment.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

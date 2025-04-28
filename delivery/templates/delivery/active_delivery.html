@@ -1,0 +1,50 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Active Deliveries</li>
+    </ol>
+</nav>
+
+<div class="container">
+    <h2 class="mb-4">Active Deliveries</h2>
+
+    {% if active_deliveries %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Delivery ID</th>
+                <th>Food Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for delivery in active_deliveries %}
+            <tr>
+                <td>{{ delivery.delivery_id }}</td>
+                <td>{{ delivery.food_name }}</td>
+                <td>{{ delivery.donation.get_category_display }}</td>
+                <td>{{ delivery.donation.quantity }}</td>
+                <td><span class="badge bg-warning">{{ delivery.get_status_display }}</span></td>
+                <td>
+                    <a href="{% url 'delivery:track_delivery' delivery.pk %}" class="btn btn-success">
+                        <i class="bi bi-geo-alt"></i> Track
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> You have no active deliveries at the moment.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

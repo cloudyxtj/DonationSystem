@@ -1,0 +1,116 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">My Deliveries</li>
+    </ol>
+</nav>
+
+<div class="page-header mb-4 d-flex justify-content-between align-items-center">
+    <h2>My Deliveries</h2>
+    <a href="{% url 'delivery:available_delivery' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Find New Deliveries
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if deliveries %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Delivery ID</th>
+                        <th>Food Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for delivery in deliveries %}
+                    <tr>
+                        <td>{{ delivery.delivery_id }}</td>
+                        <td>{{ delivery.donation.food_name }}</td>
+                        <td>{{ delivery.donation.get_category_display }}</td>
+                        <td>{{ delivery.donation.quantity }}</td>
+                        <td>
+                            <span
+                                class="badge {% if delivery.status == 'in_transit' %}bg-warning{% elif delivery.status == 'delivered' %}bg-success{% else %}bg-primary{% endif %}">
+                                {{ delivery.get_status_display|default:delivery.status|title }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-grid gap-2">
+                                {% if delivery.status == 'in_transit' %}
+                                <a href="{% url 'delivery:track_delivery' delivery.pk %}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-geo-alt"></i> Track
+                                </a>
+                                <!-- Mark as Delivered Button -->
+                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#markCompletedModal{{ delivery.pk }}">
+                                    <i class="bi bi-check-circle"></i> Mark Delivered
+                                </button>
+                                {% elif delivery.status == 'delivered' and delivery.proof %}
+                                <a href="{% url 'delivery:delivery_detail' delivery.pk %}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-info-circle"></i> Details
+                                </a>
+                                <a href="{{ delivery.proof.url }}" class="btn btn-sm btn-success" target="_blank">
+                                    <i class="bi bi-image"></i> View Proof
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Mark as Completed Modal -->
+                    {% if delivery.status == 'in_transit' %}
+                    <div class="modal fade" id="markCompletedModal{{ delivery.pk }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Mark Delivery as Completed</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <form method="POST" action="{% url 'delivery:mark_delivered' delivery.pk %}"
+                                    enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="proof{{ delivery.pk }}" class="form-label">Upload Proof of
+                                                Delivery</label>
+                                            <input type="file" class="form-control" id="proof{{ delivery.pk }}"
+                                                name="proof" required>
+                                            <div class="form-text">Upload a photo or document as proof of successful
+                                                delivery.</div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Confirm Delivery</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> You haven't made any deliveries yet.
+            <a href="{% url 'delivery:available_delivery' %}" class="alert-link">Find available deliveries</a>.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

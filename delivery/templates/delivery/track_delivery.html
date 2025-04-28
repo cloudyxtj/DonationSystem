@@ -1,0 +1,149 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'delivery:active_delivery' %}">Active Deliveries</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Track Delivery</li>
+    </ol>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Delivery Details</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Food:</strong> {{ delivery.food_name }}</p>
+                            <p><strong>Category:</strong> {{ delivery.donation.get_category_display }}</p>
+                            <p><strong>Quantity:</strong> {{ delivery.donation.quantity }}</p>
+                            <p><strong>Expiry Date:</strong> {{ delivery.donation.expiry_date|date:"F d, Y" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Delivery ID:</strong> {{ delivery.delivery_id }}</p>
+                            <p><strong>Status:</strong> <span class="badge bg-warning">{{ delivery.get_status_display }}</span></p>
+                            <p><strong>Donor:</strong> {{ delivery.donation.donor.user.username }}</p>
+                            <p><strong>Recipient:</strong> {{ delivery.donation.recipient.user.username }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4>Location Details</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-geo-alt-fill text-success"></i> Pickup Location</h5>
+                                    <p class="card-text">{{ delivery.donation.address }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-geo-alt-fill text-danger"></i> Delivery Location</h5>
+                                    <p class="card-text">{{ delivery.donation.request.address }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map will be added here -->
+            <!-- <div class="card mb-4">
+                <div class="card-body">
+                    <h4>Delivery Route</h4>
+                    <div id="map" style="height: 400px;"></div>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4>Delivery Progress</h4>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item active">
+                            <i class="bi bi-check-circle-fill"></i> Accepted
+                        </li>
+                        <li class="list-group-item active">
+                            <i class="bi bi-truck"></i> In Transit
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-box-seam"></i> Delivered
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4>Actions</h4>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#markCompletedModal">
+                            <i class="bi bi-check-circle"></i> Mark as Delivered
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mark as Completed Modal -->
+<div class="modal fade" id="markCompletedModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mark Delivery as Completed</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'delivery:mark_delivered' delivery.pk %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="proof" class="form-label">Upload Proof of Delivery</label>
+                        <input type="file" class="form-control" id="proof" name="proof" required>
+                        <div class="form-text">Please upload a photo or document as proof of delivery.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- {% block extra_js %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}"></script>
+<script>
+    // Initialize map
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: { lat: 0, lng: 0 } // This will be updated with actual coordinates
+        });
+
+        // Add markers and route logic here
+    }
+
+    // Load map when the page is ready
+    document.addEventListener('DOMContentLoaded', initMap);
+</script>
+{% endblock %} -->
+{% endblock %}
