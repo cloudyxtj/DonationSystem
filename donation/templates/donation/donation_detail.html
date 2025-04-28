@@ -37,9 +37,16 @@
 
                 <div class="mt-4">
                     {% if user.is_authenticated and user.recipient %}
-                    <a href="{% url 'donation:make_request' pk=donation.pk %}" class="btn btn-success">Make Request</a>
+                    <a href="{% url 'donation:make_request' pk=donation.pk %}" class="btn btn-success">
+                        Make Request
+                    </a>
+                    {% elif user.is_authenticated and user.donor and donation.donor.user == user and donation.status == 'available'%}
+                    <a href="{% url 'donation:modify_donation' pk=donation.pk %}" class="btn btn-success">
+                        Modify Donation
+                    </a>
                     {% endif %}
                 </div>
+
             </div>
         </div>
     </div>

@@ -1,116 +1,90 @@
 {% extends 'app/base.html' %}
 {% load static %}
 
-{% block title %}Make Food Donation Request{% endblock %}
+{% block title %}Request | Share A Spoon{% endblock %}
 
 {% block content %}
-<div class="container-fluid px-4 py-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-11">
-            <div class="form-card">
-                <h2 class="text-center mb-4">Request Food Donation</h2>
-                
-                <!-- Food Donation Details -->
-                <div class="mb-4">
-                    <h4>Food Donation Details</h4>
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ donation.food_name }}</h5>
-                            <p class="card-text"><strong>Category:</strong> {{ donation.category }}</p>
-                            <p class="card-text"><strong>Quantity:</strong> {{ donation.quantity }}</p>
-                            <p class="card-text"><strong>Expiry Date:</strong> {{ donation.expiry_date }}</p>
-                            {% if donation.description %}
-                            <p class="card-text"><strong>Description:</strong> {{ donation.description }}</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'donation:view_donation' %}">All Donations</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'donation:donation_detail' pk=donation.pk %}">{{ donation.food_name }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Make Request</li>
+    </ol>
+</nav>
 
-                <!-- Request Form -->
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    
-                    <div class="mb-4">
-                        <label for="delivery_type" class="form-label">Delivery Type</label>
-                        <select class="form-select" id="delivery_type" name="delivery_type" required>
-                            <option value="" selected disabled>Select delivery type</option>
-                            <option value="pickup">Pick Up</option>
-                            <option value="delivery">Delivery</option>
-                        </select>
-                    </div>
+<div class="page-header">
+    <h2>Make Request</h2>
+</div>
 
-                    <div class="mb-4">
-                        <label for="address" class="form-label">Address</label>
-                        <textarea class="form-control" id="address" name="address" rows="2" required
-                            placeholder="Enter your delivery address"></textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="contact_number" class="form-label">Contact Number</label>
-                        <input type="tel" class="form-control" id="contact_number" name="contact_number" required
-                            placeholder="Enter your contact number">
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="preferred_time" class="form-label">Preferred Pick-up/Delivery Time</label>
-                        <input type="datetime-local" class="form-control" id="preferred_time" name="preferred_time" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="special_instructions" class="form-label">Special Instructions (Optional)</label>
-                        <textarea class="form-control" id="special_instructions" name="special_instructions" rows="2"
-                            placeholder="Any special instructions for pick-up or delivery"></textarea>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success">Submit Request</button>
-                        <a href="{% url 'donation:donation_detail' donation.pk %}" class="btn btn-outline-secondary">Cancel</a>
-                    </div>
-                </form>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Food Details</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Food Name:</strong> {{ donation.food_name }}</p>
+                <p><strong>Category:</strong> {{ donation.category }}</p>
+                <p><strong>Quantity:</strong> {{ donation.quantity }}</p>
+                <p><strong>Expiry Date:</strong> {{ donation.expiry_date|date:"F d, Y" }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Donor:</strong> {{ donation.donor.user.username }}</p>
+                <p><strong>Address:</strong> {{ donation.address }}</p>
             </div>
         </div>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="mb-3">
+                <label class="form-label"><strong>Request Type:</strong></label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="request_type" id="pickup" value="pickup"
+                        checked>
+                    <label class="form-check-label" for="pickup">
+                        Self Pickup
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="request_type" id="delivery" value="delivery">
+                    <label class="form-check-label" for="delivery">
+                        Delivery
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-3" id="address-field">
+                <label for="address" class="form-label"><strong>Delivery Address:</strong></label>
+                <textarea class="form-control" id="address" name="address" rows="3"
+                    placeholder="Enter your delivery address"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">Submit Request</button>
+            <a href="{% url 'donation:donation_detail' donation.pk %}" class="btn btn-outline-secondary">Cancel</a>
+        </form>
     </div>
 </div>
 {% endblock %}
 
-{% block extra_css %}
-<style>
-    .form-card {
-        width: 100%;
-        margin: 40px auto;
-        padding: 40px;
-        background-color: #ffffff;
-        border-radius: 1rem;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    }
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const pickup = document.getElementById('pickup');
+        const delivery = document.getElementById('delivery');
+        const addressField = document.getElementById('address-field');
 
-    .form-card h2, .form-card h4 {
-        color: #185040;
-    }
+        function toggleAddress() {
+            if (pickup.checked) {
+                addressField.style.display = 'none';
+            } else {
+                addressField.style.display = 'block';
+            }
+        }
 
-    .form-card label {
-        color: #185040;
-        font-weight: 500;
-    }
+        pickup.addEventListener('change', toggleAddress);
+        delivery.addEventListener('change', toggleAddress);
 
-    .form-control:focus, .form-select:focus {
-        border-color: #34bc91;
-        box-shadow: 0 0 0 0.2rem rgba(52, 188, 145, 0.25);
-    }
-
-    .btn-success {
-        background-color: #34bc91;
-        border-color: #34bc91;
-    }
-
-    .btn-success:hover {
-        background-color: #288e6e;
-        border-color: #288e6e;
-    }
-
-    .bg-light {
-        background-color: #e5fbf4 !important;
-    }
-</style>
+        toggleAddress(); // initial call
+    });
+</script>
 {% endblock %}
-

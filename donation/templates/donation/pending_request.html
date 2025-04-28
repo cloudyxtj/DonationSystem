@@ -1,0 +1,77 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Pending Requests | Share A Spoon{% endblock %} 
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Pending Requests</li>
+    </ol>
+</nav>
+
+<div class="page-header">
+    <h2>Pending Requests</h2>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Food Name</th>
+                        <th>Recipient</th>
+                        <th>Type</th>
+                        <th>Requested At</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in pending_requests %}
+                    <tr>
+                        <td>{{ request.request_id }}</td>
+                        <td>{{ request.donation.food_name }}</td>
+                        <td>{{ request.recipient.user.username }}</td>
+                        <td>{{ request.request_type }}</td>
+                        <td>{{ request.requested_at|date:"F d, Y H:i" }}</td>
+                        <td>
+                            <span class="badge {% if request.status == 'pending' %}bg-warning
+                                           {% elif request.status == 'approved' %}bg-success
+                                           {% elif request.status == 'denied' %}bg-danger
+                                           {% endif %}">
+                                {{ request.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                        <form method="POST" action="{% url 'donation:update_request_status' request.pk %}">
+                            {% csrf_token %}
+                        
+                            <!-- Approve Button with Confirmation -->
+                            <button type="submit" name="status" value="approved" class="btn btn-sm btn-success"
+                                onclick="return confirm('Are you sure you want to approve this request?')">
+                                <i class="bi bi-check-circle"></i> Approve
+                            </button>
+                        
+                            <!-- Deny Button with Confirmation -->
+                            <button type="submit" name="status" value="denied" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure you want to deny this request?')">
+                                <i class="bi bi-x-circle"></i> Deny
+                            </button>
+                        </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No pending requests found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

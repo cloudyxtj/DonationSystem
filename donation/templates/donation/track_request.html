@@ -1,0 +1,176 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Track Requests | Share A Spoon{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Track Requests</li>
+    </ol>
+</nav>
+
+<div class="page-header">
+    <h2>Track Requests</h2>
+</div>
+
+<div class="row">
+    <!-- Requests List -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Your Requests</h5>
+                <div class="list-group">
+                    {% for request in requests %}
+                    <a href="{% url 'donation:request_detail' request.pk %}"
+                        class="list-group-item list-group-item-action {% if selected_request.id == request.pk %}active{% endif %}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ request.donation.food_name }}</h6>
+                            <small>{{ request.requested_at|date:"M d, Y" }}</small>
+                        </div>
+                        <p class="mb-1">Status:
+                            <span class="status-badge {{ request.status }}">
+                                {{ request.get_status_display }}
+                            </span>
+                        </p>
+                    </a>
+                    {% empty %}
+                    <div class="list-group-item">
+                        <p class="text-center mb-0">No requests found.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Details -->
+    <div class="col-md-8">
+        {% if selected_request %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Food Details</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Food Name:</strong> {{ selected_request.donation.food_name }}</p>
+                        <p><strong>Category:</strong> {{ selected_request.donation.get_category_display }}</p>
+                        <p><strong>Quantity:</strong> {{ selected_request.donation.quantity }}</p>
+                        <p><strong>Expiry Date:</strong> {{ selected_request.donation.expiry_date|date:"F d, Y" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Request ID:</strong> {{ selected_request.request_id }}</p>
+                        <p><strong>Request Type:</strong> {{ selected_request.get_request_type_display }}</p>
+                        <p><strong>Requested At:</strong> {{ selected_request.requested_at|date:"F d, Y H:i" }}</p>
+                        <p><strong>Status:</strong>
+                            <span class="status-badge {{ selected_request.status }}">
+                                {{ selected_request.get_status_display }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Location</h5>
+                <p><strong>Address:</strong> {{ selected_request.donation.address }}</p>
+                <p><strong>Donor:</strong> {{ selected_request.donation.donor.user.username }}</p>
+                <p><strong>Contact Number:</strong> {{ selected_request.donation.donor.user.phone_no }}</p>
+
+                <!-- Google Maps -->
+                <div id="map" style="height: 400px; margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Status</h5>
+                {% if selected_request.status == 'approved' %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Your request has been approved. Please pick up the food at the
+                    specified location.
+                </div>
+                <form method="post" action="{% url 'donation:mark_completed' selected_request.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success w-100"
+                        onclick="return confirm('Are you sure you have collected the food?')">
+                        <i class="bi bi-check-circle"></i> Mark as Completed
+                    </button>
+                </form>
+                {% elif selected_request.status == 'denied' %}
+                <div class="alert alert-danger">
+                    <i class="bi bi-x-circle"></i> This request has been denied.
+                </div>
+                {% elif selected_request.status == 'completed' %}
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle"></i> This request has been completed.
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> This request is still pending approval.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body">
+                <p class="text-center mb-0">Select a request to view details</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_js %}
+{% if selected_request %}
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async
+    defer></script>
+<script>
+    function initMap() {
+        // Initialize the map
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 3.1390, lng: 101.6869 }, // Default to Kuala Lumpur
+            zoom: 15
+        });
+
+        // Geocode the address
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ address: "{{ selected_request.donation.address }}" }, (results, status) => {
+            if (status === 'OK') {
+                const location = results[0].geometry.location;
+
+                // Add marker
+                const marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: "{{ selected_request.donation.food_name }}"
+                });
+
+                // Add info window
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                    <div>
+                        <h6>{{ selected_request.donation.food_name }}</h6>
+                        <p>{{ selected_request.donation.address }}</p>
+                    </div>
+                `
+                });
+
+                marker.addListener('click', () => {
+                    infoWindow.open(map, marker);
+                });
+
+                map.setCenter(location);
+            } else {
+                console.error('Geocode was not successful for the following reason:', status);
+            }
+        });
+    }
+</script>
+{% endif %}
+{% endblock %}
+
+{% endblock %}
