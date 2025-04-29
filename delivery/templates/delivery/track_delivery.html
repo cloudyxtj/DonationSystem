@@ -27,7 +27,7 @@
                             <p><strong>Delivery ID:</strong> {{ delivery.delivery_id }}</p>
                             <p><strong>Status:</strong> <span class="badge bg-warning">{{ delivery.get_status_display }}</span></p>
                             <p><strong>Donor:</strong> {{ delivery.donation.donor.user.username }}</p>
-                            <p><strong>Recipient:</strong> {{ delivery.donation.recipient.user.username }}</p>
+                            <p><strong>Recipient:</strong> {{ delivery_request.recipient.user.username }}</p>
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title"><i class="bi bi-geo-alt-fill text-danger"></i> Delivery Location</h5>
-                                    <p class="card-text">{{ delivery.donation.request.address }}</p>
+                                    <p class="card-text">{{ delivery_request.address }}</p>
                                 </div>
                             </div>
                         </div>
@@ -71,17 +71,17 @@
                 <div class="card-body">
                     <h4>Delivery Progress</h4>
                     <div class="progress mb-3">
-                        <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50"
-                            aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar" role="progressbar" style="width: {{ progress }}%" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
                     </div>
                     <ul class="list-group">
-                        <li class="list-group-item active">
+                        <li class="list-group-item {% if delivery.status != 'pending' %}active{% endif %}">
                             <i class="bi bi-check-circle-fill"></i> Accepted
                         </li>
-                        <li class="list-group-item active">
+                        <li class="list-group-item {% if delivery.status == 'in_transit' or delivery.status == 'delivered' %}active{% endif %}">
                             <i class="bi bi-truck"></i> In Transit
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item {% if delivery.status == 'delivered' %}active{% endif %}">
                             <i class="bi bi-box-seam"></i> Delivered
                         </li>
                     </ul>

@@ -51,6 +51,10 @@ def track_delivery(request, pk):
             'donation__donor__user',
             'driver',
             'driver__user'
+        ).prefetch_related(
+            'donation__request_set',
+            'donation__request_set__recipient',
+            'donation__request_set__recipient__user'
         ),
         pk=pk
     )
@@ -60,8 +64,20 @@ def track_delivery(request, pk):
         messages.error(request, 'You can only track your own deliveries.')
         return redirect('delivery:my_delivery')
     
+    # Get the delivery request
+    delivery_request = delivery.donation.request_set.filter(request_type='delivery').first()
+    
+    # Calculate progress
+    progress = 0
+    if delivery.status == 'in_transit':
+        progress = 50
+    elif delivery.status == 'delivered':
+        progress = 100
+    
     return render(request, 'delivery/track_delivery.html', {
-        'delivery': delivery
+        'delivery': delivery,
+        'delivery_request': delivery_request,
+        'progress': progress
     })
 
 @login_required
