@@ -21,9 +21,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('app.urls')), 
-    path('user/', include('user.urls')),
-    path('donation/', include('donation.urls')), 
-    path('delivery/', include('delivery.urls')),
-    # path('feedback/', include('feedback.urls')),
+    path('', include('app.urls', namespace='app')), 
+    path('user/', include('user.urls', namespace='user')),
+    path('donation/', include('donation.urls', namespace='donation')), 
+    path('delivery/', include('delivery.urls', namespace='delivery')),
+    path('inquiry/', include('inquiry.urls', namespace='inquiry')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
