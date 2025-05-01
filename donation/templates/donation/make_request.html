@@ -1,12 +1,12 @@
 {% extends 'app/base.html' %}
 {% load static %}
 
-{% block title %}Request | Share A Spoon{% endblock %}
+{% block title %}Make Request | Share A Spoon{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'app:home' %}">Home</a></li>
         <li class="breadcrumb-item"><a href="{% url 'donation:view_donation' %}">All Donations</a></li>
         <li class="breadcrumb-item"><a href="{% url 'donation:donation_detail' pk=donation.pk %}">{{ donation.food_name }}</a></li>
         <li class="breadcrumb-item active" aria-current="page">Make Request</li>

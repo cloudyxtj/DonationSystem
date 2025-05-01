@@ -1,11 +1,13 @@
 {% extends 'app/base.html' %}
 {% load static %}
 
+{% block title %}Browse Donations | Share A Spoon{% endblock %}
+
 {% block content %}
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">All Donations</li>
+        <li class="breadcrumb-item"><a href="{% url 'app:home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Browse Donations</li>
     </ol>
 </nav>
 
