@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 # from django.contrib.auth.models import User
 # from django.conf import settings
 
@@ -50,6 +49,7 @@ class Request(models.Model):
         ('pending', 'Pending'),
         ('approved', 'Approved'),
         ('denied', 'Denied'),
+        ('completed', 'Completed'),
     ]
 
     REQUEST_TYPE = [
@@ -81,7 +81,7 @@ class Receipt(models.Model):
     request = models.ForeignKey('Request', on_delete=models.CASCADE)
     donor = models.ForeignKey('user.Donor', on_delete=models.CASCADE)
     recipient = models.ForeignKey('user.Recipient', on_delete=models.CASCADE)
-    generated_at = models.DateTimeField(default=timezone.now)
+    generated_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.receipt_id:
