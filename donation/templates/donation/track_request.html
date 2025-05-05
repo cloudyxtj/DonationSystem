@@ -34,13 +34,6 @@
                                 {{ request.get_status_display }}
                             </span>
                         </p>
-                        {% if request.request_type == 'delivery' and request.status == 'approved' %}
-                        <p class="mb-1">Delivery Status:
-                            <span class="status-badge {{ request.donation.delivery.status }}">
-                                {{ request.donation.delivery.get_status_display }}
-                            </span>
-                        </p>
-                        {% endif %}
                     </a>
                     {% empty %}
                     <div class="list-group-item">
@@ -57,7 +50,7 @@
         {% if selected_request %}
         <div class="card mb-4">
             <div class="card-body">
-                <h5 class="card-title">Food Details</h5>
+                <h5 class="card-title">Details</h5>
                 <div class="row">
                     <div class="col-md-6">
                         <p><strong>Food Name:</strong> {{ selected_request.donation.food_name }}</p>
@@ -102,32 +95,34 @@
             <div class="card-body">
                 <h5 class="card-title">Status</h5>
                 {% if selected_request.status == 'approved' %}
-                    {% if selected_request.request_type == 'delivery' %}
-                        {% if selected_request.donation.delivery.status == 'pending' %}
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> Your request has been approved. Waiting for a driver to accept the delivery.
-                        </div>
-                        {% elif selected_request.donation.delivery.status == 'in_transit' %}
-                        <div class="alert alert-warning">
-                            <i class="bi bi-truck"></i> Your delivery is in transit. The driver is on the way.
-                        </div>
-                        {% elif selected_request.donation.delivery.status == 'delivered' %}
-                        <div class="alert alert-success">
-                            <i class="bi bi-check-circle"></i> Your delivery has been completed.
-                        </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> Your request has been approved. Please pick up the food at the specified location.
-                        </div>
-                        <form method="post" action="{% url 'donation:mark_completed' selected_request.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-success w-100"
-                                onclick="return confirm('Are you sure you have collected the food?')">
-                                <i class="bi bi-check-circle"></i> Mark as Completed
-                            </button>
-                        </form>
-                    {% endif %}
+                {% if selected_request.request_type == 'delivery' %}
+                {% if selected_request.donation.delivery.status == 'pending' %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Your request has been approved. Waiting for a driver to accept the
+                    delivery.
+                </div>
+                {% elif selected_request.donation.delivery.status == 'in_transit' %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-truck"></i> Your delivery is in transit. The driver is on the way.
+                </div>
+                {% elif selected_request.donation.delivery.status == 'delivered' %}
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle"></i> Your delivery has been completed.
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Your request has been approved. Please pick up the food at the
+                    specified location.
+                </div>
+                <form method="post" action="{% url 'donation:mark_completed' selected_request.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success w-100"
+                        onclick="return confirm('Are you sure you have collected the food?')">
+                        <i class="bi bi-check-circle"></i> Mark as Completed
+                    </button>
+                </form>
+                {% endif %}
                 {% elif selected_request.status == 'denied' %}
                 <div class="alert alert-danger">
                     <i class="bi bi-x-circle"></i> This request has been denied.

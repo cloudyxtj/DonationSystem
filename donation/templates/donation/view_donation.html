@@ -15,6 +15,25 @@
 
 <!-- Filter Form -->
 <form method="get" class="my-4">
+    <!-- Filter by Quantity Threshold -->
+    <div class="mb-3">
+        <label for="quantity" class="form-label">Minimum Quantity</label>
+        <input type="number" name="quantity" min="1" value="{{ request.GET.quantity }}" class="form-control"
+            style="max-width: 200px;">
+    </div>
+    
+    <!-- <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select name="category" class="form-select" style="max-width: 200px;">
+                <option value="cooked" {% if request.GET.category == 'cooked' %}selected{% endif %}>Cooked Food</option>
+                <option value="packaged" {% if request.GET.category == 'packaged' %}selected{% endif %}>Packaged Food</option>
+                <option value="canned" {% if request.GET.category == 'canned' %}selected{% endif %}>Canned Goods</option>
+                <option value="baked" {% if request.GET.category == 'baked' %}selected{% endif %}>Baked Goods</option>
+                <option value="others" {% if request.GET.category == 'others' %}selected{% endif %}>Others</option>
+            </select>
+        </div> -->
+    
+    <!-- Filter by Sorting Criteria -->
     <select name="filter" onchange="this.form.submit()" class="form-select" style="max-width: 200px;">
         <option value="expiry" {% if request.GET.filter == 'expiry' %}selected{% endif %}>Sort by Expiry Date</option>
         <option value="quantity" {% if request.GET.filter == 'quantity' %}selected{% endif %}>Sort by Quantity</option>

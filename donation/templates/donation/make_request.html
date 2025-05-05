@@ -25,9 +25,9 @@
                 <p><strong>Food Name:</strong> {{ donation.food_name }}</p>
                 <p><strong>Category:</strong> {{ donation.category }}</p>
                 <p><strong>Quantity:</strong> {{ donation.quantity }}</p>
-                <p><strong>Expiry Date:</strong> {{ donation.expiry_date|date:"F d, Y" }}</p>
             </div>
             <div class="col-md-6">
+                <p><strong>Expiry Date:</strong> {{ donation.expiry_date|date:"F d, Y" }}</p>
                 <p><strong>Donor:</strong> {{ donation.donor.user.username }}</p>
                 <p><strong>Address:</strong> {{ donation.address }}</p>
             </div>
