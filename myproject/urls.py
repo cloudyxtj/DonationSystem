@@ -26,4 +26,5 @@ urlpatterns = [
     path('donation/', include('donation.urls', namespace='donation')), 
     path('delivery/', include('delivery.urls', namespace='delivery')),
     path('inquiry/', include('inquiry.urls', namespace='inquiry')),
+    path('feedback/', include('feedback.urls', namespace='feedback')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

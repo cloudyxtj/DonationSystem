@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'donation',
     'delivery',
     'inquiry',
+    'feedback',
 ]
 
 MIDDLEWARE = [
