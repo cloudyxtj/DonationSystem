@@ -1,8 +1,7 @@
 from django.db import models
 from user.models import Driver
-from donation.models import Donation
+from donation.models import Request
 from .observers import delivery_status_subject
-from django.utils import timezone
 
 class Delivery(models.Model):
     DELIVERY_STATUS_CHOICES = [
@@ -13,10 +12,10 @@ class Delivery(models.Model):
 
     delivery_id = models.CharField(max_length=10, unique=True, editable=False)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, null=True, blank=True)
-    donation = models.ForeignKey(Donation, on_delete=models.CASCADE)  
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, null=True, blank=True)  
     food_name = models.CharField(max_length=100)
     status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='pending')
-    delivery_time = models.DateTimeField(null=True, blank=True)
+    delivery_time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     proof = models.ImageField(upload_to='delivery_proofs/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -51,6 +50,9 @@ class Delivery(models.Model):
 
     def __str__(self):
         return f"Delivery {self.delivery_id}"
+    
+    class Meta:
+        verbose_name_plural = "Deliveries"
 
 class DeliveryLog(models.Model):
     delivery_id = models.CharField(max_length=10)
