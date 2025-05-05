@@ -31,9 +31,9 @@
                 {% for delivery in active_deliveries %}
                 <tr>
                     <td>{{ delivery.delivery_id }}</td>
-                    <td>{{ delivery.donation.food_name }}</td>
-                    <td>{{ delivery.donation.get_category_display }}</td>
-                    <td>{{ delivery.donation.quantity }}</td>
+                    <td>{{ delivery.food_name }}</td>
+                    <td>{{ delivery.request.donation.get_category_display }}</td>
+                    <td>{{ delivery.request.donation.quantity }}</td>
                     <td>
                         <span class="badge bg-warning">{{ delivery.get_status_display }}</span>
                     </td>

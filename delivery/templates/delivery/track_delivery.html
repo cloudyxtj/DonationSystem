@@ -21,15 +21,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Food:</strong> {{ delivery.food_name }}</p>
-                            <p><strong>Category:</strong> {{ delivery.donation.get_category_display }}</p>
-                            <p><strong>Quantity:</strong> {{ delivery.donation.quantity }}</p>
-                            <p><strong>Expiry Date:</strong> {{ delivery.donation.expiry_date|date:"F d, Y" }}</p>
+                            <p><strong>Category:</strong> {{ delivery.request.donation.get_category_display }}</p>
+                            <p><strong>Quantity:</strong> {{ delivery.request.donation.quantity }}</p>
+                            <p><strong>Expiry Date:</strong> {{ delivery.request.donation.expiry_date|date:"F d, Y" }}</p>
                         </div>
                         <div class="col-md-6">
                             <p><strong>Delivery ID:</strong> {{ delivery.delivery_id }}</p>
                             <p><strong>Status:</strong> <span class="badge bg-warning">{{ delivery.get_status_display }}</span></p>
-                            <p><strong>Donor:</strong> {{ delivery.donation.donor.user.username }}</p>
-                            <p><strong>Recipient:</strong> {{ delivery_request.recipient.user.username }}</p>
+                            <p><strong>Donor:</strong> {{ delivery.request.donation.donor.user.username }}</p>
+                            <p><strong>Recipient:</strong> {{ delivery.request.recipient.user.username }}</p>
                         </div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title"><i class="bi bi-geo-alt-fill text-success"></i> Pickup Location</h5>
-                                    <p class="card-text">{{ delivery.donation.address }}</p>
+                                    <p class="card-text">{{ delivery.request.donation.address }}</p>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title"><i class="bi bi-geo-alt-fill text-danger"></i> Delivery Location</h5>
-                                    <p class="card-text">{{ delivery_request.address }}</p>
+                                    <p class="card-text">{{ delivery.request.address }}</p>
                                 </div>
                             </div>
                         </div>
