@@ -13,6 +13,13 @@ class QuantityFilter(FilterStrategy):
     def filter(self, queryset):
         return queryset.order_by('-quantity') # descending order
 
+# class CategoryFilter(FilterStrategy):
+#     def __init__(self, category):
+#         self.category = category
+
+#     def filter(self, donations):
+#         return donations.filter(category=self.category)
+    
 class FilterContext:
     def __init__(self, strategy: FilterStrategy):
         self.strategy = strategy
