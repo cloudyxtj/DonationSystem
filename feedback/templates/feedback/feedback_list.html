@@ -1,0 +1,25 @@
+<div class="container my-5">
+    <h4 class="mb-3">Feedback for {{ donation.donor.user.username }}</h4>
+    {% if feedbacks %}
+    {% for feedback in feedbacks %}
+    <div class="card mb-3 shadow-sm rounded-3">
+        <div class="card-body">
+            <p><strong>{{ feedback.request.donation.food_name }}</strong></p>
+            <p><em>
+                    Rating:
+                    {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= feedback.rating %} <i class="bi bi-star-fill text-warning"></i>
+                        {% else %}
+                        <i class="bi bi-star text-muted"></i>
+                        {% endif %}
+                        {% endfor %}
+                </em></p>
+            <p>{{ feedback.comment }}</p>
+            <small class="text-muted">Submitted on {{ feedback.submitted_at|date:"M d, Y" }}</small>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="text-muted">No feedback available for this donor yet.</p>
+    {% endif %}
+</div>

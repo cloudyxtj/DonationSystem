@@ -134,6 +134,59 @@ h4 {
     object-fit: cover;
 }
 
+/* Track request status */
+.status-badge {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.status-badge.pending {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.status-badge.approved {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.status-badge.denied {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.status-badge.completed {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+/* Star Rating */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    font-size: 1.5rem;
+}
+
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    color: #ddd;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.star-rating label:hover i,
+.star-rating label:hover~label i,
+.star-rating input:checked~label i {
+    color: #ffc107;
+}
+
 /* Footer Styles */
 .footer {
     margin-top: auto;
@@ -164,33 +217,4 @@ h4 {
 
 .footer ul li a:hover {
     color: #34bc91 !important;
-}
-
-/* Track request status */
-.status-badge {
-    padding: 8px 12px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 4px;
-    text-transform: uppercase;
-}
-
-.status-badge.pending {
-    background-color: #ffc107;
-    color: #000;
-}
-
-.status-badge.approved {
-    background-color: #28a745;
-    color: #fff;
-}
-
-.status-badge.denied {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.status-badge.completed {
-    background-color: #17a2b8;
-    color: #fff;
 }
