@@ -11,7 +11,7 @@ def signup_view(request):
         if form.is_valid():
             user = UserFactory.create_user(form)
             login(request, user)
-            return redirect('home')
+            return redirect('app:home')
     else:
         form = UserSignupForm()
     
@@ -30,7 +30,7 @@ class MyLoginView(LoginView):
             return reverse_lazy('delivery:available_delivery')
         elif user.is_superuser:
             return reverse_lazy('admin:index')
-        return reverse_lazy('home')
+        return reverse_lazy('app:home')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
