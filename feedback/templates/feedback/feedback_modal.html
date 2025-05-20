@@ -1,0 +1,46 @@
+{% if request.status == 'completed' %}
+{% with feedback_exists=request.feedback_set.exists %}
+{% if not feedback_exists %}
+<div class="modal fade" id="feedbackModal{{ request.id }}" tabindex="-1"
+    aria-labelledby="feedbackModalLabel{{ request.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedbackModalLabel{{ request.id }}">Rate Your Experience</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'feedback:submit_feedback' request.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">How would you rate this donation?</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5{{ request.id }}" name="rating" value="5">
+                            <label for="star5{{ request.id }}" title="5 stars"><i class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star4{{ request.id }}" name="rating" value="4">
+                            <label for="star4{{ request.id }}" title="4 stars"><i class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star3{{ request.id }}" name="rating" value="3">
+                            <label for="star3{{ request.id }}" title="3 stars"><i class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star2{{ request.id }}" name="rating" value="2">
+                            <label for="star2{{ request.id }}" title="2 stars"><i class="bi bi-star-fill"></i></label>
+                            <input type="radio" id="star1{{ request.id }}" name="rating" value="1" required>
+                            <label for="star1{{ request.id }}" title="1 star"><i class="bi bi-star-fill"></i></label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="comment{{ request.id }}" class="form-label">Your feedback (optional)</label>
+                        <textarea class="form-control" id="comment{{ request.id }}" name="comment" rows="3"
+                            placeholder="Share your experience with this donation..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %} 
+{% endwith %}
+{% endif %}

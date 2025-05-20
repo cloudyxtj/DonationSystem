@@ -50,7 +50,7 @@
                 <td>
                     {% if donation.status == 'collected' or donation.status == 'delivered' %}
                     <a href="#" class="btn btn-sm btn-success">
-                        <i class="bi bi-download"></i> Download
+                        <i class="bi bi-download"></i> Download Receipt
                     </a>
                     {% elif donation.status == 'available' %}
                     <a href="{% url 'donation:modify_donation' donation.pk %}" class="btn btn-sm btn-success">
