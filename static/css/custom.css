@@ -134,21 +134,21 @@ h4 {
     object-fit: cover;
 }
 
-/* Track request status */
+/* Track status */
 .status-badge {
-    padding: 8px 12px;
-    font-size: 14px;
+    padding: 4px 8px;
+    font-size: 12px;
     font-weight: 600;
     border-radius: 4px;
-    text-transform: uppercase;
 }
 
 .status-badge.pending {
     background-color: #ffc107;
-    color: #000;
+    color: #fff;
 }
 
-.status-badge.approved {
+.status-badge.approved,
+.status-badge.available {
     background-color: #28a745;
     color: #fff;
 }
@@ -158,8 +158,16 @@ h4 {
     color: #fff;
 }
 
-.status-badge.completed {
+.status-badge.completed,
+.status-badge.delivered,
+.status-badge.collected {
     background-color: #17a2b8;
+    color: #fff;
+}
+
+.status-badge.reserved,
+.status-badge.in_transit {
+    background-color: #6c757d;
     color: #fff;
 }
 
@@ -217,4 +225,34 @@ h4 {
 
 .footer ul li a:hover {
     color: #34bc91 !important;
+}
+
+/* modify donation card styling*/
+.modify-card {
+    border: none;
+    border-radius: 10px;
+}
+
+.modify-card input,
+.modify-card select,
+.modify-card textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 0.5rem;
+    border: 1px solid #D3D3D3;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+.modify-card input[type="checkbox"] {
+    width: auto;
+    padding: 0;
+    margin-top: 0;
+    display: inline-block; /* Keep inline */
+}
+
+.modify-card label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #185040;
 }

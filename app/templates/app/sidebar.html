@@ -7,7 +7,7 @@
     <div class="offcanvas-body">
         {% if user.role == 'Donor' %}
         <a class="nav-link" href="{% url 'donation:view_donation' %}"><i class="bi bi-search-heart"></i> Browse Donations</a>
-        <a class="nav-link" href="{% url 'donation:donate_food' %}"><i class="bi bi-plus-square"></i> New Donation</a>
+        <a class="nav-link" href="{% url 'donation:donate_food' %}"><i class="bi bi-plus-square"></i> Add Donation</a>
         <a class="nav-link" href="{% url 'donation:pending_request' %}"><i class="bi bi-envelope-open-heart"></i> Pending Requests</a>
         <a class="nav-link" href="{% url 'donation:my_donation' %}"><i class="bi bi-box2-heart"></i> My Donations</a>
 
@@ -24,7 +24,6 @@
         {% elif user.role == 'Admin' %}
         {% elif user.is_superuser %}
         <a class="nav-link" href="/admin/"><i class="bi bi-universal-access"></i> Admin</a>
-        <a class="nav-link" href="{% url 'donation:view_donation' %}"><i class="bi bi-search-heart"></i> Browse Donations</a> 
         {% endif %}
     </div>
 </div>
