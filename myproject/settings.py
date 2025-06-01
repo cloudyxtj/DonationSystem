@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'delivery',
     'inquiry',
     'feedback',
+    'receipt',
 ]
 
 MIDDLEWARE = [
