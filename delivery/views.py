@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from .models import Delivery
 from donation.models import Request
 from django.utils import timezone
@@ -27,7 +26,7 @@ def accept_delivery(request, pk):
     
     # Check if the request is already assigned to a driver
     if Delivery.objects.filter(request=delivery_request).exists():
-        messages.error(request, 'This delivery has already been accepted by another driver.')
+        # messages.error(request, 'This delivery has already been accepted by another driver.')
         return redirect('delivery:available_delivery')
     
     # Get the driver instance
@@ -45,7 +44,7 @@ def accept_delivery(request, pk):
     delivery_request.donation.status = 'reserved'
     delivery_request.donation.save()
     
-    messages.success(request, f'You have successfully accepted the delivery of {delivery.food_name}.')
+    # messages.success(request, f'You have successfully accepted the delivery of {delivery.food_name}.')
     return redirect('delivery:my_delivery')
 
 @login_required
@@ -80,7 +79,7 @@ def track_delivery(request, pk):
     
     # Verify the driver owns this delivery
     if delivery.driver.user != request.user:
-        messages.error(request, 'You can only track your own deliveries.')
+        # messages.error(request, 'You can only track your own deliveries.')
         return redirect('delivery:my_delivery')
     
     # Calculate progress
@@ -112,7 +111,7 @@ def delivery_detail(request, pk):
     
     # Verify the driver owns this delivery
     if delivery.driver.user != request.user:
-        messages.error(request, 'You can only view your own deliveries.')
+        # messages.error(request, 'You can only view your own deliveries.')
         return redirect('delivery:my_delivery')
     
     return render(request, 'delivery/delivery_detail.html', {
@@ -125,13 +124,13 @@ def mark_delivered(request, pk):
     
     # Verify the driver owns this delivery
     if delivery.driver.user != request.user:
-        messages.error(request, 'You can only update your own deliveries.')
+        # messages.error(request, 'You can only update your own deliveries.')
         return redirect('delivery:my_delivery')
     
     if request.method == 'POST':
         proof = request.FILES.get('proof')
         if not proof:
-            messages.error(request, 'Please upload proof of delivery.')
+            # messages.error(request, 'Please upload proof of delivery.')
             return redirect('delivery:delivery_detail', pk=pk)
         
         # Update delivery status
@@ -150,7 +149,7 @@ def mark_delivered(request, pk):
         req.status = 'completed'
         req.save()
 
-        messages.success(request, 'Delivery has been marked as completed.')
+        # messages.success(request, 'Delivery has been marked as completed.')
         return redirect('delivery:my_delivery')
     
     return redirect('delivery:delivery_detail', pk=pk)

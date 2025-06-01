@@ -35,10 +35,12 @@
                     <td>{{ delivery.request.donation.get_category_display }}</td>
                     <td>{{ delivery.request.donation.quantity }}</td>
                     <td>
-                        <span class="badge bg-warning">{{ delivery.get_status_display }}</span>
+                        <span class="status-badge {{ delivery.status }} d-inline-block text-nowrap">
+                            {{ delivery.get_status_display }}
+                        </span>
                     </td>
                     <td>
-                        <a href="{% url 'delivery:track_delivery' delivery.pk %}" class="btn btn-sm btn-info">
+                        <a href="{% url 'delivery:track_delivery' delivery.pk %}" class="btn btn-sm btn-info d-inline-block text-nowrap">
                             <i class="bi bi-geo-alt"></i> Track
                         </a>
                     </td>

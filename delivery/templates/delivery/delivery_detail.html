@@ -7,7 +7,7 @@
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'app:home' %}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'delivery:my_delivery' %}">Delivery History</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'delivery:my_delivery' %}">My Deliveries</a></li>
         <li class="breadcrumb-item active" aria-current="page">Delivery Details</li>
     </ol>
 </nav>
@@ -26,8 +26,8 @@
                             <p><strong>Food:</strong> {{ delivery.food_name }}</p>
                             <p><strong>Status:</strong>
                                 <span
-                                    class="badge {% if delivery.status == 'in_transit' %}bg-warning{% elif delivery.status == 'delivered' %}bg-success{% else %}bg-primary{% endif %}">
-                                    {{ delivery.status|title }}
+                                    class="status-badge {{delivery.status}}">
+                                    {{ delivery.get_status_display }}
                                 </span>
                             </p>
                         </div>
@@ -69,18 +69,26 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-geo-alt-fill text-success"></i> Pickup
-                                        Location</h5>
-                                    <p class="card-text">{{ delivery.request.donation.address }}</p>
+                                    <h5 class="card-title"><i class="bi bi-geo-alt-fill text-success"></i> Pickup Location</h5>
+                                    <p class="card-text">
+                                        <a href="https://www.google.com/maps/search/?api=1&query={{ delivery.request.donation.latitude }},{{ delivery.request.donation.longitude }}"
+                                            target="_blank" rel="noopener noreferrer">
+                                            {{ delivery.request.donation.address }}
+                                        </a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-geo-alt-fill text-danger"></i> Delivery
-                                        Location</h5>
-                                    <p class="card-text">{{ delivery.request.address }}</p>
+                                    <h5 class="card-title"><i class="bi bi-geo-alt-fill text-danger"></i> Delivery Location</h5>
+                                    <p class="card-text">
+                                        <a href="https://www.google.com/maps/search/?api=1&query={{ delivery.request.latitude }},{{ delivery.request.longitude }}"
+                                            target="_blank" rel="noopener noreferrer">
+                                            {{ delivery.request.address }}
+                                        </a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
