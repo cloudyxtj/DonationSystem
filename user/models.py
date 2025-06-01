@@ -18,8 +18,6 @@ class Donor(models.Model):
 
 class Recipient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    favorite = models.ManyToManyField('donation.Donation', related_name='favorited_by', blank=True)
-
     def __str__(self):
         return f"{self.user.username}"
     

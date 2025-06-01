@@ -10,14 +10,14 @@
                     <p class="mt-2 mb-0">We'd love to hear from you!</p>
                 </div>
                 <div class="card-body p-4">
-                    {% if messages %}
+                    <!-- {% if messages %}
                         {% for message in messages %}
                             <div class="alert alert-{{ message.tags }} alert-dismissible fade show text-center" role="alert">
                                 {{ message }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         {% endfor %}
-                    {% endif %}
+                    {% endif %} -->
                     
                     <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
