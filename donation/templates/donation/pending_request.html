@@ -35,32 +35,67 @@
                         <td>{{ request.request_id }}</td>
                         <td>{{ request.donation.food_name }}</td>
                         <td>{{ request.recipient.user.username }}</td>
-                        <td>{{ request.request_type }}</td>
+                        <td>
+                            {{ request.request_type|title }}
+                        
+                            {% if request.request_type == "delivery" %}
+                            <br>
+                            <small class="text-muted">
+                                <i class="bi bi-geo-alt"></i> {{ request.address }}
+                            </small>
+                            {% endif %}
+                        </td>
+                        
                         <td>{{ request.requested_at|date:"F d, Y H:i" }}</td>
                         <td>
-                            <span class="badge {% if request.status == 'pending' %}bg-warning
-                                           {% elif request.status == 'approved' %}bg-success
-                                           {% elif request.status == 'denied' %}bg-danger
-                                           {% endif %}">
+                            <span class="status-badge {{ request.status }}">
                                 {{ request.get_status_display }}
                             </span>
                         </td>
                         <td>
-                        <form method="POST" action="{% url 'donation:update_request_status' request.pk %}">
+                        <form method="POST" action="{% url 'donation:update_request_status' request.pk %}" class="d-flex gap-2 flex-wrap">
                             {% csrf_token %}
                         
                             <!-- Approve Button with Confirmation -->
-                            <button type="submit" name="status" value="approved" class="btn btn-sm btn-success"
+                            <button type="submit" name="status" value="approved" class="btn btn-sm btn-success flex-fill"
                                 onclick="return confirm('Are you sure you want to approve this request?')">
                                 <i class="bi bi-check-circle"></i> Approve
                             </button>
                         
                             <!-- Deny Button with Confirmation -->
-                            <button type="submit" name="status" value="denied" class="btn btn-sm btn-danger"
-                                onclick="return confirm('Are you sure you want to deny this request?')">
-                                <i class="bi bi-x-circle"></i> Deny
+                            <button type="button" class="btn btn-sm btn-danger flex-fill" data-bs-toggle="modal" data-bs-target="#denyModal{{ request.pk }}">
+                                <i class="bi bi-x-circle"></i> Deny                   
                             </button>
                         </form>
+
+                        <!-- Modal for Denial Reason -->
+                        <div class="modal fade" id="denyModal{{ request.pk }}" tabindex="-1" aria-labelledby="denyModalLabel{{ request.pk }}"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form method="POST" action="{% url 'donation:update_request_status' request.pk %}">
+                                        {% csrf_token %}
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="denyModalLabel{{ request.pk }}">
+                                                Deny Request {{ request.request_id }}
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="denyReason{{ request.pk }}" class="form-label">Reason for Denial</label>
+                                                <textarea name="deny_reason" class="form-control" id="denyReason{{ request.pk }}" required></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" name="status" value="denied" class="btn btn-danger">
+                                                Confirm
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         </td>
                     </tr>
                     {% empty %}

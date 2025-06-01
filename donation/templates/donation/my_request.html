@@ -31,15 +31,16 @@
                 <tbody>
                     {% for request in requests %}
                     <tr>
-                        <td>{{ request.request_id }}</td>
+                        <td><a href="{% url 'donation:request_detail' request.pk %}" class="text-decoration-none" a>{{ request.request_id }}</td>
                         <td>{{ request.donation.food_name }}</td>
                         <td>{{ request.requested_at|date:"F d, Y H:i" }}</td>
                         <td>
-                            <span class="status-badge {{ request.status }}">
+                            <span class="status-badge {{ request.status }} ">
                                 {{ request.get_status_display }}
                             </span>
                         </td>
                         <td>
+                            <div class="d-flex gap-2 flex-wrap">
                             {% if request.status == 'completed' %}
                                 <a href="#" class="btn btn-sm btn-success">
                                     <i class="bi bi-download"></i> Download Receipt
@@ -58,6 +59,7 @@
                                     {% endif %}
                                 {% endwith %}
                             {% endif %}
+                            </div>
                         </td>
                     </tr>
 

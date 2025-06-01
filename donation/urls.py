@@ -16,6 +16,4 @@ urlpatterns = [
     path('pending-request/', views.pending_request, name='pending_request'),  # Keep it singular here
     path('update-request-status/<int:pk>/', views.update_request_status, name='update_request_status'),
     path('mark-completed/<int:pk>/', views.mark_completed, name='mark_completed'),
-    # path('download-receipt/<int:pk>/', views.download_receipt, name='download_receipt'),
-
 ]

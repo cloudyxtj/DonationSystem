@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Donation, Request, Receipt
+from .models import Donation, Request
 
 # @admin.register(Donation)
 # class DonationAdmin(admin.ModelAdmin):
@@ -9,4 +9,3 @@ from .models import Donation, Request, Receipt
 
 admin.site.register(Donation)
 admin.site.register(Request)
-admin.site.register(Receipt)

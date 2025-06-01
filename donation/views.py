@@ -7,6 +7,14 @@ from .models import Donation, Request
 from feedback.models import Feedback
 from .state import DonationContext
 from .decorator import QuantityDecorator
+from geopy.geocoders import Nominatim
+
+def geocode_address(address):
+    geolocator = Nominatim(user_agent="share_a_spoon")
+    location = geolocator.geocode(address)
+    if location:
+        return location.latitude, location.longitude
+    return None, None
 
 def view_donation(request):
     donations = Donation.objects.filter(status='available')
@@ -62,6 +70,12 @@ def donate_food(request):
         if form.is_valid():
             donation = form.save(commit=False)
             donation.donor = request.user.donor
+
+            # Geocode address
+            lat, lon = geocode_address(donation.address)
+            donation.latitude = lat
+            donation.longitude = lon
+
             donation.save()
             return redirect('donation:my_donation')
     else:
@@ -105,6 +119,42 @@ def modify_donation(request, pk):
     })
 
 @login_required
+def pending_request(request):
+    # Get all pending requests (for example, requests that are in 'pending' status)
+    pending_requests = Request.objects.filter(status='pending', donation__donor__user=request.user) # Follow the relation: Request -> Donation -> Donor -> User
+    return render(request, 'donation/pending_request.html', {'pending_requests': pending_requests})
+
+@login_required
+def update_request_status(request, pk):
+    # Retrieve the specific request by primary key (pk)
+    req = get_object_or_404(Request, pk=pk)
+    
+    # Handle form submission and status change
+    if request.method == 'POST':
+        new_status = request.POST.get('status')  # Get the status from the form
+
+        if new_status == 'denied':
+           # Get the denial reason from the form
+            deny_reason = request.POST.get('deny_reason', '').strip()
+            req.status = 'denied'
+            req.deny_reason = deny_reason  # Save the reason
+            req.save()
+
+            # Update the related donation's status to 'available'
+            don = req.donation
+            don.status = 'available'  # Change donation status to 'available'
+            don.save()
+        
+        elif new_status == 'approved':
+            req.status = 'approved'
+            req.save()
+
+        return redirect('donation:pending_request')  # Redirect to the pending requests page
+
+    # If not a POST request, render the page (or redirect based on your logic)
+    return redirect('donation:pending_request')
+
+@login_required
 def make_request(request, pk):
     donation = get_object_or_404(Donation, pk=pk)
 
@@ -115,6 +165,11 @@ def make_request(request, pk):
             request_type = form.cleaned_data['request_type']
             address = form.cleaned_data['address']
 
+            # Only geocode if it is delivery
+            lat, lon = (None, None)
+            if request_type == 'delivery':
+                lat, lon = geocode_address(address)
+
             # Create a new request entry in the database
             new_request = Request.objects.create(
                 donation=donation,
@@ -123,6 +178,11 @@ def make_request(request, pk):
                 status='pending',
                 address=address if request_type == 'delivery' else None,
             )
+
+            # Save geolocation if available
+            new_request.latitude = lat
+            new_request.longitude = lon
+            new_request.save()
 
             # Update the donation status
             context = DonationContext(donation)
@@ -148,7 +208,6 @@ def track_request(request):
     requests = Request.objects.filter(
         recipient=request.user.recipient
     ).select_related('donation', 'donation__donor', 'donation__donor__user').order_by('-requested_at')
-    
     return render(request, 'donation/track_request.html', {
         'requests': requests
     })
@@ -207,33 +266,3 @@ def mark_completed(request, pk):
         return redirect('donation:request_detail', pk=req.pk)  # Redirect to the request detail page
     
     return redirect('donation:track_request')
-
-@login_required
-def pending_request(request):
-    # Get all pending requests (for example, requests that are in 'pending' status)
-    pending_requests = Request.objects.filter(status='pending', donation__donor__user=request.user) # Follow the relation: Request -> Donation -> Donor -> User
-    return render(request, 'donation/pending_request.html', {'pending_requests': pending_requests})
-
-@login_required
-def update_request_status(request, pk):
-    # Retrieve the specific request by primary key (pk)
-    req = get_object_or_404(Request, pk=pk)
-    
-    # Handle form submission and status change
-    if request.method == 'POST':
-        new_status = request.POST.get('status')  # Get the status from the form
-
-        if new_status == 'denied':
-            # Mark the request as denied
-            req.status = 'denied'
-            req.save()
-
-            # Update the related donation's status to 'available'
-            don = req.donation
-            don.status = 'available'  # Change donation status to 'available'
-            don.save()
-
-        return redirect('donation:pending_request')  # Redirect to the pending requests page
-
-    # If not a POST request, render the page (or redirect based on your logic)
-    return redirect('donation:pending_request')

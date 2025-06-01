@@ -25,13 +25,12 @@ class Donation(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY, default='others')
     quantity = models.PositiveIntegerField()
     expiry_date = models.DateField()
-    address = models.TextField() 
+    address = models.TextField()
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True) 
     status = models.CharField(max_length=10, choices=STATUS, default='available')
     created_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='donation/', blank=True, null=True)  
-
-    # A ManyToMany field to track recipients who have favorited the donation
-    favorite = models.ManyToManyField('user.Recipient', related_name='favorite_donations', blank=True)
+    image = models.ImageField(upload_to='donation/', blank=True, null=True) 
 
     def save(self, *args, **kwargs):
         if not self.donation_id:
@@ -58,13 +57,16 @@ class Request(models.Model):
     ]
 
     request_id = models.CharField(max_length=10, unique=True)  
-    donation = models.ForeignKey('donation.Donation', on_delete=models.CASCADE)  
+    donation = models.ForeignKey(Donation, on_delete=models.CASCADE)  
     recipient = models.ForeignKey('user.Recipient', on_delete=models.CASCADE)  
     request_type = models.CharField(max_length=10, choices=REQUEST_TYPE, default='pickup')
     address = models.TextField(null=True, blank=True)  # address entered only when requesting
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     requested_at = models.DateTimeField(auto_now_add=True) 
     status = models.CharField(max_length=10, choices=REQUEST_STATUS, default='pending')
-
+    deny_reason = models.TextField(blank=True, null=True) 
+    
     def save(self, *args, **kwargs):
         if not self.request_id:
             last = Request.objects.all().order_by('id').last()
@@ -74,21 +76,3 @@ class Request(models.Model):
 
     def __str__(self):
         return f"Request {self.request_id}"
-    
-class Receipt(models.Model):
-    receipt_id = models.CharField(max_length=10, unique=True)  
-    donation = models.ForeignKey(Donation, on_delete=models.CASCADE)  
-    request = models.ForeignKey('Request', on_delete=models.CASCADE)
-    donor = models.ForeignKey('user.Donor', on_delete=models.CASCADE)
-    recipient = models.ForeignKey('user.Recipient', on_delete=models.CASCADE)
-    generated_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        if not self.receipt_id:
-            last = Receipt.objects.all().order_by('id').last()
-            next_id = 1 if not last else last.id + 1
-            self.receipt_id = f"RC{next_id:03d}"
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"Receipt {self.receipt_id}"

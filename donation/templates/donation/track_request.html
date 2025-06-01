@@ -50,7 +50,7 @@
         {% if selected_request %}
         <div class="card mb-4">
             <div class="card-body">
-                <h5 class="card-title">Details</h5>
+                <h5 class="card-title">Food Details</h5>
                 <div class="row">
                     <div class="col-md-6">
                         <p><strong>Food Name:</strong> {{ selected_request.donation.food_name }}</p>
@@ -67,13 +67,6 @@
                                 {{ selected_request.get_status_display }}
                             </span>
                         </p>
-                        {% if selected_request.request_type == 'delivery' and selected_request.status == 'approved' %}
-                        <p><strong>Delivery Status:</strong>
-                            <span class="status-badge {{ selected_request.donation.delivery.status }}">
-                                {{ selected_request.donation.delivery.get_status_display }}
-                            </span>
-                        </p>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -82,51 +75,74 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">Location</h5>
-                <p><strong>Address:</strong> {{ selected_request.donation.address }}</p>
+                <p><strong>Address:</strong>
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ selected_request.donation.latitude }},{{ selected_request.donation.longitude }}"
+                        target="_blank" rel="noopener noreferrer">
+                        {{ selected_request.donation.address }}
+                    </a>
+                </p>
+                
                 <p><strong>Donor:</strong> {{ selected_request.donation.donor.user.username }}</p>
                 <p><strong>Contact Number:</strong> {{ selected_request.donation.donor.user.phone_no }}</p>
 
-                <!-- Google Maps -->
-                <div id="map" style="height: 400px; margin-top: 20px;"></div>
+                <!-- Map -->
+                <div id="map" style="height: 400px;"></div>
+
+                <!-- Embed location safely -->
+                {% if selected_request %}
+                <script id="map-coords" type="application/json">
+                {
+                    "lat": {{ selected_request.donation.latitude|default:"null" }},
+                    "lng": {{ selected_request.donation.longitude|default:"null" }},
+                    "label": "{{ selected_request.donation.food_name|escapejs }}",
+                    "address": "{{ selected_request.donation.address|escapejs }}"
+                }
+                </script>
+                {% endif %}
             </div>
         </div>
 
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Status</h5>
+                <!--The request has been approved-->
                 {% if selected_request.status == 'approved' %}
-                {% if selected_request.request_type == 'delivery' %}
-                {% if selected_request.donation.delivery.status == 'pending' %}
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> Your request has been approved. Waiting for a driver to accept the
-                    delivery.
-                </div>
-                {% elif selected_request.donation.delivery.status == 'in_transit' %}
-                <div class="alert alert-warning">
-                    <i class="bi bi-truck"></i> Your delivery is in transit. The driver is on the way.
-                </div>
-                {% elif selected_request.donation.delivery.status == 'delivered' %}
-                <div class="alert alert-success">
-                    <i class="bi bi-check-circle"></i> Your delivery has been completed.
-                </div>
-                {% endif %}
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> Your request has been approved. Please pick up the food at the
-                    specified location.
-                </div>
-                <form method="post" action="{% url 'donation:mark_completed' selected_request.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success w-100"
-                        onclick="return confirm('Are you sure you have collected the food?')">
-                        <i class="bi bi-check-circle"></i> Mark as Completed
-                    </button>
-                </form>
-                {% endif %}
+                    <!--Request type is "Delivery"-->
+                    {% if selected_request.request_type == 'delivery' %}
+                        {% with selected_request.delivery_set.first as delivery %}
+                            {% if delivery %}
+                                {% if delivery.status == 'in_transit' %}
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-truck"></i> Your delivery is in transit. The driver is on the way.
+                                </div>
+                                {% endif %}
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> Your request has been approved. Waiting for a driver to accept the delivery.
+                            </div>
+                            {% endif %}
+                        {% endwith %}
+                    <!--Request type is "Pickup"-->
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Your request has been approved. Please pick up the food at the
+                        specified location.
+                    </div>
+                    <form method="post" action="{% url 'donation:mark_completed' selected_request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success w-100"
+                            onclick="return confirm('Are you sure you have collected the food?')">
+                            <i class="bi bi-check-circle"></i> Mark as Completed
+                        </button>
+                    </form>
+                    {% endif %}
+                <!---The request has been denied-->
                 {% elif selected_request.status == 'denied' %}
                 <div class="alert alert-danger">
                     <i class="bi bi-x-circle"></i> This request has been denied.
+                    <p><strong>Reason:</strong> {{ selected_request.deny_reason }}</p>
                 </div>
+                <!---The request has been completed-->
                 {% elif selected_request.status == 'completed' %}
                 <div class="alert alert-success">
                     <i class="bi bi-check-circle"></i> This request has been completed.
@@ -147,54 +163,11 @@
         {% endif %}
     </div>
 </div>
-
-{% block extra_js %}
-{% if selected_request %}
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async
-    defer></script>
-<script>
-    function initMap() {
-        // Initialize the map
-        const map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: 3.1390, lng: 101.6869 }, // Default to Kuala Lumpur
-            zoom: 15
-        });
-
-        // Geocode the address
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ address: "{{ selected_request.donation.address }}" }, (results, status) => {
-            if (status === 'OK') {
-                const location = results[0].geometry.location;
-
-                // Add marker
-                const marker = new google.maps.Marker({
-                    position: location,
-                    map: map,
-                    title: "{{ selected_request.donation.food_name }}"
-                });
-
-                // Add info window
-                const infoWindow = new google.maps.InfoWindow({
-                    content: `
-                    <div>
-                        <h6>{{ selected_request.donation.food_name }}</h6>
-                        <p>{{ selected_request.donation.address }}</p>
-                    </div>
-                `
-                });
-
-                marker.addListener('click', () => {
-                    infoWindow.open(map, marker);
-                });
-
-                map.setCenter(location);
-            } else {
-                console.error('Geocode was not successful for the following reason:', status);
-            }
-        });
-    }
-</script>
-{% endif %}
 {% endblock %}
 
+{% block extra_js %}
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{% static 'js/leaflet-map.js' %}"></script>
 {% endblock %}

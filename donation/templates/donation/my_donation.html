@@ -40,7 +40,9 @@
                 </a></td>
                 <td>{{ donation.quantity }}</td>
                 <td>
-                    <span class="badge bg-secondary text-capitalize">{{ donation.status }}</span>
+                    <span class="status-badge {{ donation.status }}">
+                        {{ donation.get_status_display }}
+                    </span>
                 </td>
                 <!-- <td>
                     <a href="{% url 'donation:donation_detail' donation.pk %}" class="btn btn-info btn-sm">

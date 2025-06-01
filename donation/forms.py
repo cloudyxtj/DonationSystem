@@ -13,6 +13,8 @@ class DonationForm(forms.ModelForm):
                   'image']
         widgets = {
             'expiry_date': forms.DateInput(attrs={'type': 'date'}),
+            'address': forms.Textarea(attrs={'rows': 3}),
+            'description': forms.Textarea(attrs={'rows': 3}),
         }
 
 class RequestForm(forms.ModelForm):
