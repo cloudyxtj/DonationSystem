@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">Status</h5>
                 <!--The request has been approved-->
@@ -111,11 +111,21 @@
                     {% if selected_request.request_type == 'delivery' %}
                         {% with selected_request.delivery_set.first as delivery %}
                             {% if delivery %}
+                               
                                 {% if delivery.status == 'in_transit' %}
                                 <div class="alert alert-warning">
                                     <i class="bi bi-truck"></i> Your delivery is in transit. The driver is on the way.
                                 </div>
                                 {% endif %}
+
+                                <!-- Driver Details -->
+                                {% if delivery.driver %}
+                                <div class="mt-3">
+                                    <p><strong>Driver:</strong> {{ delivery.driver.user.username }}</p>
+                                    <p><strong>Contact Number:</strong> {{ delivery.driver.user.phone_no }}</p>
+                                </div>
+                                {% endif %}
+
                             {% else %}
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle"></i> Your request has been approved. Waiting for a driver to accept the delivery.
@@ -147,6 +157,23 @@
                 <div class="alert alert-success">
                     <i class="bi bi-check-circle"></i> This request has been completed.
                 </div>
+
+                <!-- Show Delivery Proof if delivery exists -->
+                {% with selected_request.delivery_set.first as delivery %}
+                    {% if delivery.proof %}
+                    <div class="mt-4">
+                        <a href="{{ delivery.proof.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-success">
+                            <i class="bi bi-image"></i> View Delivery Proof            
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% if delivery.delivery_time %}
+                    <div class="mt-4">
+                        <p><strong>Delivered at:</strong> {{ delivery.delivery_time|date:"F d, Y H:i" }}</p>
+                    </div>
+                    {% endif %}
+                {% endwith %}
+
                 {% else %}
                 <div class="alert alert-warning">
                     <i class="bi bi-exclamation-triangle"></i> This request is still pending approval.
@@ -154,6 +181,7 @@
                 {% endif %}
             </div>
         </div>
+
         {% else %}
         <div class="card">
             <div class="card-body">
