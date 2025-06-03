@@ -13,8 +13,17 @@ document.addEventListener("DOMContentLoaded", function () {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        // Add pickup marker
-        if (mapData.pickup?.lat !== null && mapData.pickup?.lng !== null) {
+        // Use in 'Track request'
+        if ('lat' in mapData && 'lng' in mapData && mapData.lat !== null && mapData.lng !== null) {
+            const singleLatLng = [mapData.lat, mapData.lng];
+            L.marker(singleLatLng)
+                .addTo(map)
+                .bindPopup(`<strong>${mapData.label}</strong><br>${mapData.address}`);
+            bounds.push(singleLatLng);
+        }
+
+        // Use in 'Track delivery', support (pickup + delivery)
+        if (mapData.pickup && mapData.pickup.lat !== null && mapData.pickup.lng !== null) {
             const pickupLatLng = [mapData.pickup.lat, mapData.pickup.lng];
             L.marker(pickupLatLng)
                 .addTo(map)
@@ -22,8 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
             bounds.push(pickupLatLng);
         }
 
-        // Add delivery marker
-        if (mapData.delivery?.lat !== null && mapData.delivery?.lng !== null) {
+        if (mapData.delivery && mapData.delivery.lat !== null && mapData.delivery.lng !== null) {
             const deliveryLatLng = [mapData.delivery.lat, mapData.delivery.lng];
             L.marker(deliveryLatLng)
                 .addTo(map)
@@ -31,12 +39,11 @@ document.addEventListener("DOMContentLoaded", function () {
             bounds.push(deliveryLatLng);
         }
 
-        // Draw polyline if both points exist
+        // Polyline for both points
         if (bounds.length === 2) {
             L.polyline(bounds, { color: 'blue', weight: 4 }).addTo(map);
         }
 
-        // Fit map to bounds
         if (bounds.length > 0) {
             map.fitBounds(bounds, { padding: [50, 50] });
         } else {
