@@ -16,11 +16,11 @@ class QuantityDecorator(FilterDecorator):
         filtered = super().filter(donations)
         return filtered.filter(quantity__gte=self.min_quantity)
 
-# class CategoryDecorator(FilterDecorator):
-#     def __init__(self, base_filter: FilterStrategy, category):
-#         super().__init__(base_filter)
-#         self.category = category
+class CategoryDecorator(FilterDecorator):
+    def __init__(self, base_filter: FilterStrategy, category):
+        super().__init__(base_filter)
+        self.category = category
 
-#     def filter(self, donations):
-#         filtered = super().filter(donations)
-#         return filtered.filter(category=self.category)
+    def filter(self, donations):
+        filtered = super().filter(donations)
+        return filtered.filter(category=self.category)

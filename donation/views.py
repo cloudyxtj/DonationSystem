@@ -6,8 +6,9 @@ from .forms import DonationForm, RequestForm
 from .models import Donation, Request
 from feedback.models import Feedback
 from .state import DonationContext
-from .decorator import QuantityDecorator
+from .decorator import QuantityDecorator, CategoryDecorator
 from geopy.geocoders import Nominatim
+from django.utils import timezone
 
 def geocode_address(address):
     geolocator = Nominatim(user_agent="share_a_spoon")
@@ -17,6 +18,8 @@ def geocode_address(address):
     return None, None
 
 def view_donation(request):
+    today = timezone.now().date()
+    Donation.objects.filter(expiry_date__lt=today, status='available').update(status='expired')
     donations = Donation.objects.filter(status='available')
 
     # Mapping
@@ -42,6 +45,12 @@ def view_donation(request):
     # Apply the quantity decorator dynamically
     if quantity is not None:
         strategy = QuantityDecorator(strategy, min_quantity=quantity)
+    
+    # Apply category decorator
+    category = request.GET.get('category')
+    if category:
+        strategy = CategoryDecorator(strategy, category=category)
+
 
     context = FilterContext(strategy)  # Applying the decorator
     filter = context.apply_filter(donations)

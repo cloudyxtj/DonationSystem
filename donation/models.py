@@ -8,6 +8,7 @@ class Donation(models.Model):
         ('reserved', 'Reserved'),
         ('collected', 'Collected'),
         ('delivered', 'Delivered'),
+        ('expired', 'Expired'),
     ]
 
     CATEGORY = [
