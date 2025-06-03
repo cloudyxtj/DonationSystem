@@ -257,3 +257,38 @@ h4 {
     margin-bottom: 5px;
     color: #185040;
 }
+
+/* Inquiry form */
+.form-control {
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #34bc91;
+    box-shadow: 0 0 0 0.25rem rgba(52, 188, 145, 0.25);
+}
+
+textarea.form-control {
+    min-height: 150px;
+    width: 100%;
+}
+
+/* Success animation for inquiry form */
+.bi-check-circle-fill {
+    animation: scale-in 0.5s ease-out;
+}
+
+@keyframes scale-in {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
