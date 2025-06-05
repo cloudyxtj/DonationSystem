@@ -17,6 +17,7 @@
         <thead class="table">
             <tr>
                 <th scope="col">Image</th>
+                <th scope="col">Donation ID</th>
                 <th scope="col">Food Name</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Status</th>
@@ -36,8 +37,10 @@
                     {% endif %}
                 </td>
                 <td><a href="{% url 'donation:donation_detail' donation.pk %}" class="text-decoration-none">
-                    {{ donation.food_name }}
-                </a></td>
+                        {{ donation.donation_id }}
+                    </a>
+                </td>
+                <td>{{ donation.food_name }}</td>
                 <td>{{ donation.quantity }}</td>
                 <td>
                     <span class="status-badge {{ donation.status }}">
@@ -51,7 +54,7 @@
                 </td> -->
                 <td>
                     {% if donation.status == 'collected' or donation.status == 'delivered' %}
-                    <a href="#" class="btn btn-sm btn-success">
+                    <a href="{% url 'receipt:download_receipt' pk=donation.pk %}" class="btn btn-sm btn-success" target="_blank">
                         <i class="bi bi-download"></i> Download Receipt
                     </a>
                     {% elif donation.status == 'available' %}

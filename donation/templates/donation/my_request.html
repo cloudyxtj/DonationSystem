@@ -41,8 +41,9 @@
                         </td>
                         <td>
                             <div class="d-flex gap-2 flex-wrap">
-                            {% if request.status == 'completed' %}
-                                <a href="#" class="btn btn-sm btn-success">
+                                {% if request.status == 'completed' %}
+                                <a href="{% url 'receipt:download_receipt' pk=request.pk %}"
+                                    class="btn btn-sm btn-success" target="_blank">
                                     <i class="bi bi-download"></i> Download Receipt
                                 </a>
 
