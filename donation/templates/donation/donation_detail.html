@@ -31,7 +31,7 @@
             <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
                 <h2 class="fw-bold">{{ donation.food_name }}</h2>
                 <hr>
-                <p><strong>Category:</strong> {{ donation.category }}</p>
+                <p><strong>Category:</strong> {{ donation.get_category_display }}</p>
                 <p><strong>Quantity:</strong> {{ donation.quantity }}</p>
                 <p><strong>Expiry Date:</strong> {{ donation.expiry_date }}</p>
                 <p><strong>Description:</strong> {{ donation.description }}</p>
