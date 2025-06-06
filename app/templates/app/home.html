@@ -1,14 +1,102 @@
 {% extends 'app/base.html' %}
+{% load static %}
 
 {% block title %}Home | Share a Spoon{% endblock %}
 
 {% block content %}
-<div class="text-center mt-5">
-    <h1 class="fw-bold display-4">Share a Spoon,<br>Share a Smile.</h1>
-    <p class="lead mt-3">Share your abundance and feed someone in need.</p>
-    <div class="mt-4 hero-buttons d-flex justify-content-center flex-wrap gap-3">
-        <a href="{% url 'donation:donate_food' %}" class="btn btn-success">Donate Now</a>
-        <a href="{% url 'user:signup' %}" class="btn btn-outline-success">Sign Up</a>
+<div class="hero-section text-center py-5">
+    <div class="container-fluid px-5">
+        <h1 class="fw-bold display-3 mb-4">Share a Spoon,<br>Share a Smile.</h1>
+        <p class="lead fs-4 mt-3 mb-4">Share your abundance and feed someone in need.</p>
+        <div class="mt-4 hero-buttons d-flex justify-content-center flex-wrap gap-3">
+            <a href="{% url 'donation:donate_food' %}" class="btn btn-success btn-lg px-4">Donate Now</a>
+            <a href="{% url 'user:signup' %}" class="btn btn-outline-success btn-lg px-4">Sign Up</a>
+        </div>
     </div>
 </div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center text-center">
+        <div class="col-md-5 mb-5">
+            <div class="bg-white border rounded p-4 shadow-sm hover-card">
+                <div class="stat-icon mb-3">
+                    <i class="bi bi-basket3-fill text-success" style="font-size: 2.5rem;"></i>
+                </div>
+                <h5 class="text-muted mb-2">Total Donations</h5>
+                <h2 class="text-success fw-bold mb-0">{{ total_meals }}</h2>
+                <p class="text-muted small mt-2">Food items shared with the community</p>
+            </div>
+        </div>
+        <div class="col-md-5 mb-5">
+            <div class="bg-white border rounded p-4 shadow-sm hover-card">
+                <div class="stat-icon mb-3">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 2.5rem;"></i>
+                </div>
+                <h5 class="text-muted mb-2">Successful Deliveries</h5>
+                <h2 class="text-success fw-bold mb-0">{{ completed_deals }}</h2>
+                <p class="text-muted small mt-2">Food items successfully delivered</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mission Section -->
+<div class="container mt-5 mb-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <img src="{% static 'images/SDG_logo.jpg' %}" alt="UN SDG 12" class="img-fluid rounded shadow">
+        </div>
+        <div class="col-lg-6">
+            <h2 class="fw-bold mb-4">Our Mission</h2>
+            <p class="lead mb-4">We're committed to reducing food waste and fighting hunger, aligning with the United Nations Sustainable Development Goal 12.</p>
+            
+            <div class="sdg-goals">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-recycle text-success me-3" style="font-size: 1.5rem;"></i>
+                    <p class="mb-0">Reducing food waste through efficient donation systems</p>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-people-fill text-success me-3" style="font-size: 1.5rem;"></i>
+                    <p class="mb-0">Supporting communities in need with surplus food</p>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-globe text-success me-3" style="font-size: 1.5rem;"></i>
+                    <p class="mb-0">Promoting sustainable consumption and production patterns</p>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="https://sdgs.un.org/goals/goal12" target="_blank" class="btn btn-outline-success">Learn More About SDG Goal 12</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.hover-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: rgba(25, 135, 84, 0.1);
+    margin-bottom: 1rem;
+}
+
+.sdg-goals {
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+</style>
 {% endblock %}
