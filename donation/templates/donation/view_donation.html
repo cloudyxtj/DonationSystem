@@ -16,13 +16,13 @@
 <!-- Filter Form -->
 <form method="get" class="my-4">
     <div class="row g-3 align-items-end">
-        <!-- Filter by Quantity Threshold -->
-        <div class="col-md-auto">
-            <input type="number" name="quantity" min="1" value="{{ request.GET.quantity }}" class="form-control" placeholder="Enter minimum quantity">
+        <!-- Filter by Quantity -->
+        <div class="col-md">
+            <input type="number" name="quantity" min="1" value="{{ request.GET.quantity }}" class="form-select" placeholder="Enter minimum quantity">
         </div>
         
         <!-- Category Filter -->
-        <div class="col-md-auto">
+        <div class="col-md">
             <select name="category" class="form-select" onchange="this.form.submit()">
                 <option value="">All Categories</option>
                 <option value="cooked" {% if request.GET.category == 'cooked' %}selected{% endif %}>Cooked Food</option>
@@ -34,7 +34,7 @@
         </div>
         
         <!-- Filter by Sorting Criteria -->
-        <div class="col-md-auto">
+        <div class="col-md">
             <select name="filter" onchange="this.form.submit()" class="form-select">
                 <option value="expiry" {% if request.GET.filter == 'expiry' %}selected{% endif %}>Sort by Expiry Date</option>
                 <option value="quantity" {% if request.GET.filter == 'quantity' %}selected{% endif %}>Sort by Quantity</option>
