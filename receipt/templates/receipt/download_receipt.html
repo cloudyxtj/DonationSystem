@@ -53,15 +53,15 @@
         <table>
             <tr>
                 <th>Donor</th>
-                <td>{{ receipt.donor.user.username }}</td>
+                <td>{{ receipt.request.donation.donor.user.username }}</td>
             </tr>
             <tr>
                 <th>Recipient</th>
-                <td>{{ receipt.recipient.user.username }}</td>
+                <td>{{ receipt.request.recipient.user.username }}</td>
             </tr>
             <tr>
                 <th>Donation ID</th>
-                <td>{{ receipt.donation.donation_id }}</td>
+                <td>{{ receipt.request.donation.donation_id }}</td>
             </tr>
             <tr>
                 <th>Request ID</th>
@@ -69,15 +69,15 @@
             </tr>
             <tr>
                 <th>Food Item</th>
-                <td>{{ receipt.donation.food_name }}</td>
+                <td>{{ receipt.request.donation.food_name }}</td>
             </tr>
             <tr>
                 <th>Quantity</th>
-                <td>{{ receipt.donation.quantity }} pcs</td>
+                <td>{{ receipt.request.donation.quantity }}</td>
             </tr>
             <tr>
                 <th>Category</th>
-                <td>{{ receipt.donation.get_category_display }}</td>
+                <td>{{ receipt.request.donation.get_category_display }}</td>
             </tr>
             <tr>
                 <th>Request Type</th>

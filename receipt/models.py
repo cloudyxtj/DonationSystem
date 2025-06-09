@@ -3,10 +3,7 @@ from donation.models import Donation, Request
 
 class Receipt(models.Model):
     receipt_id = models.CharField(max_length=10, unique=True)  
-    donation = models.ForeignKey(Donation, on_delete=models.CASCADE)  
     request = models.ForeignKey(Request, on_delete=models.CASCADE)
-    donor = models.ForeignKey('user.Donor', on_delete=models.CASCADE)
-    recipient = models.ForeignKey('user.Recipient', on_delete=models.CASCADE)
     generated_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
