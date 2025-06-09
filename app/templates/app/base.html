@@ -39,7 +39,6 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'app:home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">About</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'inquiry:form' %}">Contact Us</a></li>
             
                     {% if not user.is_authenticated %}
@@ -80,7 +79,6 @@
                     <h5 class="fw-bold">Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'app:home' %}" class="text-muted text-decoration-none">Home</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none">About Us</a></li>
                         <li><a href="{% url 'donation:donate_food' %}" class="text-muted text-decoration-none">Donate Food</a></li>
                         <li><a href="{% url 'inquiry:form' %}" class="text-muted text-decoration-none">Contact Us</a></li>
                     </ul>
