@@ -292,3 +292,30 @@ textarea.form-control {
         opacity: 1;
     }
 }
+
+/* Statistics in Home Page */
+.hover-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: rgba(25, 135, 84, 0.1);
+    margin-bottom: 1rem;
+}
+
+.sdg-goals {
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+}
