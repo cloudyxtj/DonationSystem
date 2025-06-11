@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.conf import settings
 from .forms import InquiryForm
 
@@ -17,13 +17,14 @@ def inquiry_form(request):
             Subject: {inquiry.subject}
             Message: {inquiry.message}
             '''
-            send_mail(
+            email = EmailMessage(
                 subject,
                 message,
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.ADMIN_EMAIL],
-                fail_silently=False,
+                settings.DEFAULT_FROM_EMAIL,  # Safe, authenticated sender (email comes from own domain)
+                [settings.ADMIN_EMAIL],       # Send to admin
+                reply_to=[inquiry.email],     # So admin replies to user
             )
+            email.send(fail_silently=False)
             
             # messages.success(request, 'Your inquiry has been sent successfully!')
             return redirect('inquiry:success')
