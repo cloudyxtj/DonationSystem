@@ -5,8 +5,9 @@ from donation.models import Request
 from django.utils import timezone
 from user.models import Driver
 from donation.state import DonationContext
+from user.decorators import role_required
 
-@login_required
+@role_required('Driver')
 def available_delivery(request):
     # Get all delivery requests that are approved and not yet assigned to a driver
     available_requests = Request.objects.filter(
@@ -20,7 +21,7 @@ def available_delivery(request):
         'available_requests': available_requests
     })
 
-@login_required
+@role_required('Driver')
 def accept_delivery(request, pk):
     delivery_request = get_object_or_404(Request, pk=pk)
     
@@ -47,7 +48,7 @@ def accept_delivery(request, pk):
     # messages.success(request, f'You have successfully accepted the delivery of {delivery.food_name}.')
     return redirect('delivery:my_delivery')
 
-@login_required
+@role_required('Driver')
 def active_delivery(request):
     driver = get_object_or_404(Driver, user=request.user)
     active_deliveries = Delivery.objects.filter(
@@ -59,7 +60,7 @@ def active_delivery(request):
         'active_deliveries': active_deliveries
     })
 
-@login_required
+@role_required('Driver')
 def track_delivery(request, pk):
     delivery = get_object_or_404(
         Delivery.objects.select_related(
@@ -95,7 +96,7 @@ def track_delivery(request, pk):
         'progress': progress
     })
 
-@login_required
+@role_required('Driver')
 def delivery_detail(request, pk):
     delivery = get_object_or_404(
         Delivery.objects.select_related(
@@ -118,7 +119,7 @@ def delivery_detail(request, pk):
         'delivery': delivery
     })
 
-@login_required
+@role_required('Driver')
 def mark_delivered(request, pk):    
     delivery = get_object_or_404(Delivery, pk=pk)
     
@@ -154,7 +155,7 @@ def mark_delivered(request, pk):
     
     return redirect('delivery:delivery_detail', pk=pk)
 
-@login_required
+@role_required('Driver')
 def my_delivery(request):    
     driver = get_object_or_404(Driver, user=request.user)
     deliveries = Delivery.objects.filter(

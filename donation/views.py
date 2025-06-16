@@ -7,14 +7,26 @@ from .models import Donation, Request
 from feedback.models import Feedback
 from .state import DonationContext
 from .decorator import QuantityDecorator, CategoryDecorator
-from geopy.geocoders import Nominatim
 from django.utils import timezone
+from django.core.paginator import Paginator
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
+from user.decorators import role_required
+
+# Initialize geolocator and rate-limited geocode globally
+geolocator = Nominatim(user_agent="share_a_spoon", timeout=5)
+geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1, max_retries=3)
 
 def geocode_address(address):
-    geolocator = Nominatim(user_agent="share_a_spoon")
-    location = geolocator.geocode(address)
-    if location:
-        return location.latitude, location.longitude
+    try:
+        location = geocode(address)
+        if location:
+            # print returned address for debugging
+            print("Geocoded to:", location.address)
+            return location.latitude, location.longitude
+    except (GeocoderTimedOut, GeocoderUnavailable):
+        pass
     return None, None
 
 def view_donation(request):
@@ -26,7 +38,6 @@ def view_donation(request):
     strategies = {
         'expiry': ExpiryDateFilter(),
         'quantity': QuantityFilter(),
-        # 'rating': RatingFilter(),  <-- easy to add later
     }
 
     filter_type = request.GET.get('filter', 'expiry')  # default to 'expiry'
@@ -55,10 +66,16 @@ def view_donation(request):
     context = FilterContext(strategy)  # Applying the decorator
     filter = context.apply_filter(donations)
 
+    # Add pagination (12 donations per page)
+    paginator = Paginator(filter, 4) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'donation/view_donation.html', {
-        'donations': filter
+        'donations': page_obj  # Pass the paginated page object
     })
-    
+
+@login_required    
 def donation_detail(request, pk):
     donation = get_object_or_404(Donation, pk=pk)
     # Get all feedbacks related to the donor of this donation
@@ -69,11 +86,8 @@ def donation_detail(request, pk):
         'feedbacks': feedbacks,
         })
 
-@login_required
+@role_required('Donor')
 def donate_food(request):
-    if not hasattr(request.user, 'donor'):
-        return HttpResponseForbidden("You are not authorized to donate food.")
-        
     if request.method == 'POST':
         form = DonationForm(request.POST, request.FILES)
         if form.is_valid():
@@ -82,6 +96,9 @@ def donate_food(request):
 
             # Geocode address
             lat, lon = geocode_address(donation.address)
+            if lat is None or lon is None:
+                form.add_error('address', "Couldn't locate this address. Please try again.")
+                return render(request, 'donation/donate_food.html', {'form': form})
             donation.latitude = lat
             donation.longitude = lon
 
@@ -91,12 +108,12 @@ def donate_food(request):
         form = DonationForm()
     return render(request, 'donation/donate_food.html', {'form': form})
 
-@login_required
+@role_required('Donor')
 def my_donation(request):
     donations = Donation.objects.filter(donor=request.user.donor)
     return render(request, 'donation/my_donation.html', {'donations': donations})
 
-@login_required
+@role_required('Donor')
 def modify_donation(request, pk):
     # Retrieve the donation instance
     donation = get_object_or_404(Donation, pk=pk)
@@ -114,8 +131,22 @@ def modify_donation(request, pk):
         if 'save' in request.POST:
             form = DonationForm(request.POST, request.FILES, instance=donation)
             if form.is_valid():
-                form.save()
+                updated_donation = form.save(commit=False)
+
+                # Geocode updated address
+                lat, lon = geocode_address(updated_donation.address)
+                if lat is None or lon is None:
+                    form.add_error('address', "Couldn't locate this address. Please try again.")
+                    return render(request, 'donation/modify_donation.html', {
+                        'form': form, 
+                        'donation': donation,
+                    })
+
+                updated_donation.latitude = lat
+                updated_donation.longitude = lon
+                updated_donation.save()
                 return redirect('donation:view_donation')
+
         elif 'delete' in request.POST:
             donation.delete()
             return redirect('donation:view_donation')
@@ -127,13 +158,13 @@ def modify_donation(request, pk):
         'donation': donation,
     })
 
-@login_required
+@role_required('Donor')
 def pending_request(request):
     # Get all pending requests (for example, requests that are in 'pending' status)
     pending_requests = Request.objects.filter(status='pending', donation__donor__user=request.user) # Follow the relation: Request -> Donation -> Donor -> User
     return render(request, 'donation/pending_request.html', {'pending_requests': pending_requests})
 
-@login_required
+@role_required('Donor')
 def update_request_status(request, pk):
     # Retrieve the specific request by primary key (pk)
     req = get_object_or_404(Request, pk=pk)
@@ -163,7 +194,7 @@ def update_request_status(request, pk):
     # If not a POST request, render the page (or redirect based on your logic)
     return redirect('donation:pending_request')
 
-@login_required
+@role_required('Recipient')
 def make_request(request, pk):
     donation = get_object_or_404(Donation, pk=pk)
 
@@ -207,7 +238,7 @@ def make_request(request, pk):
         'form': form,
     })
 
-@login_required
+@role_required('Recipient')
 def track_request(request):
     """View for recipients to track their requests."""
     if request.user.role != 'Recipient':
@@ -221,7 +252,7 @@ def track_request(request):
         'requests': requests
     })
 
-@login_required
+@role_required('Recipient')
 def request_detail(request, pk):
     """View for recipients to see details of a specific request."""
     if request.user.role != 'Recipient':
@@ -244,7 +275,7 @@ def request_detail(request, pk):
         'selected_request': selected_request
     })
 
-@login_required
+@role_required('Recipient')
 def my_request(request):
     """View for recipients to see their requests with map integration."""
     if request.user.role != 'Recipient':
@@ -259,7 +290,7 @@ def my_request(request):
         'requests': requests
     })
 
-@login_required
+@role_required('Recipient')
 def mark_completed(request, pk):
     req = get_object_or_404(Request, pk=pk)
     
