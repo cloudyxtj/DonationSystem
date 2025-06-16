@@ -66,7 +66,7 @@ def view_donation(request):
     context = FilterContext(strategy)  # Applying the decorator
     filter = context.apply_filter(donations)
 
-    # Add pagination (12 donations per page)
+    # Add pagination (* donations per page)
     paginator = Paginator(filter, 4) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -209,6 +209,12 @@ def make_request(request, pk):
             lat, lon = (None, None)
             if request_type == 'delivery':
                 lat, lon = geocode_address(address)
+                if lat is None or lon is None:
+                    form.add_error('address', "Couldn't locate this address. Please try again.")
+                    return render(request, 'donation/make_request.html', {
+                        'donation': donation,
+                        'form': form,
+                    })
 
             # Create a new request entry in the database
             new_request = Request.objects.create(

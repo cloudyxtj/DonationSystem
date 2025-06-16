@@ -57,7 +57,11 @@
                 <textarea class="form-control" id="address" name="address" rows="3"
                     placeholder="Enter your delivery address"></textarea>
             </div>
-
+            {% if form.address.errors %}
+            <div class="text-danger small">
+                {{ form.address.errors.0 }}
+            </div>
+            {% endif %}
             <button type="submit" class="btn btn-success">Submit Request</button>
             <a href="{% url 'donation:donation_detail' donation.pk %}" class="btn btn-outline-secondary">Cancel</a>
         </form>

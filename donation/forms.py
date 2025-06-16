@@ -27,9 +27,6 @@ class RequestForm(forms.ModelForm):
     class Meta:
         model = Request
         fields = ['request_type', 'address']
-        widgets = {
-            'address': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Enter your delivery address'})
-        }
 
     def clean_address(self):
         request_type = self.cleaned_data.get('request_type')
