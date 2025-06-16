@@ -35,7 +35,11 @@
                 <p><strong>Quantity:</strong> {{ donation.quantity }}</p>
                 <p><strong>Expiry Date:</strong> {{ donation.expiry_date }}</p>
                 <p><strong>Description:</strong> {{ donation.description }}</p>
-                <p><strong>Location:</strong> {{ donation.address }}</p>
+                <p><strong>Location:</strong> <a href="https://www.google.com/maps/search/?api=1&query={{ donation.latitude }},{{ donation.longitude }}"
+                    target="_blank" rel="noopener noreferrer">
+                    {{ donation.address }}</a>
+                </p>
+                
                 <p><strong>Donor:</strong> {{ donation.donor.user.username }}</p>   
                 
                 <div class="mt-4">

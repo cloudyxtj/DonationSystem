@@ -29,11 +29,9 @@
             <tr>
                 <td style="width: 100px;">
                     {% if donation.image %}
-                    <img src="{{ donation.image.url }}" class="img-thumbnail" style="max-height: 70px;"
-                        alt="{{ donation.food_name }}">
+                    <img src="{{ donation.image.url }}" class="img-thumbnail food-thumbnail" alt="{{ donation.food_name }}">
                     {% else %}
-                    <img src="{% static 'images/icon.png' %}" class="img-thumbnail" style="max-height: 70px;"
-                        alt="No Image">
+                    <img src="{% static 'images/icon.png' %}" class="img-thumbnail food-thumbnail" alt="No Image">
                     {% endif %}
                 </td>
                 <td><a href="{% url 'donation:donation_detail' donation.pk %}" class="text-decoration-none">
