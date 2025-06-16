@@ -240,10 +240,6 @@ def make_request(request, pk):
 
 @role_required('Recipient')
 def track_request(request):
-    """View for recipients to track their requests."""
-    if request.user.role != 'Recipient':
-        return redirect('app:home')
-    
     # Get all requests made by the recipient
     requests = Request.objects.filter(
         recipient=request.user.recipient
@@ -253,18 +249,13 @@ def track_request(request):
     })
 
 @role_required('Recipient')
-def request_detail(request, pk):
-    """View for recipients to see details of a specific request."""
-    if request.user.role != 'Recipient':
-        return redirect('app:home')
-    
+def request_detail(request, pk):    
     # Get the selected request
     selected_request = get_object_or_404(
         Request.objects.select_related('donation', 'donation__donor', 'donation__donor__user'),
         pk=pk,
         recipient=request.user.recipient
     )
-    
     # Get all requests for the list
     requests = Request.objects.filter(
         recipient=request.user.recipient
@@ -276,11 +267,7 @@ def request_detail(request, pk):
     })
 
 @role_required('Recipient')
-def my_request(request):
-    """View for recipients to see their requests with map integration."""
-    if request.user.role != 'Recipient':
-        return redirect('app:home')
-    
+def my_request(request):    
     # Get all requests made by the recipient
     requests = Request.objects.filter(
         recipient=request.user.recipient

@@ -13,7 +13,7 @@ urlpatterns = [
     path('track-requests/', views.track_request, name='track_request'),
     path('track-requests/<int:pk>/', views.request_detail, name='request_detail'),
     path('my-requests/', views.my_request, name='my_request'),
-    path('pending-request/', views.pending_request, name='pending_request'),  # Keep it singular here
+    path('pending-request/', views.pending_request, name='pending_request'),
     path('update-request-status/<int:pk>/', views.update_request_status, name='update_request_status'),
     path('mark-completed/<int:pk>/', views.mark_completed, name='mark_completed'),
 ]
