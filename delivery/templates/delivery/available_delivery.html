@@ -37,8 +37,14 @@
                     <div class="card mb-3">
                         <div class="card-body">
                             <h6 class="card-title">Location Details</h6>
-                            <p><strong>Pickup:</strong> {{ request.donation.address }}</p>
-                            <p><strong>Delivery:</strong> {{ request.address }}</p>
+                            <p><strong>Pickup: </strong> <a href="https://www.google.com/maps/search/?api=1&query={{ request.donation.latitude }},{{ request.donation.longitude }}"
+                                target="_blank" rel="noopener noreferrer">
+                                {{ request.donation.address }}</a>
+                            </p>
+                            <p><strong>Delivery: </strong> <a href="https://www.google.com/maps/search/?api=1&query={{ request.latitude }},{{ request.longitude }}"
+                                target="_blank" rel="noopener noreferrer">
+                                {{ request.address }}</a>
+                            </p>
                         </div>
                     </div>
 
