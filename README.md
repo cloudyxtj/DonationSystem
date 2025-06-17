@@ -45,10 +45,10 @@ env\Scripts\activate
 ```
 Note the `(env)` in front of the prompt after successfully activated.
 
-#### 3. **Install Django**
+#### 3. **Install Requirements**
 Once your virtual environment is activated, install the required dependencies:
 ```bash
-pip install django
+pip install -r requirements.txt
 ```
 
 #### 4. **Set Up the Database**
@@ -76,6 +76,9 @@ Open that URL in your web browser to view the project.
 - password: userDonor@111
 
 #### 6. **Create a Superuser (Admin Account)**
+```bash
+python manage.py createsuperuser
+```
 To log in to the Django admin site: [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin)
 
 #### Admin login credentials:
