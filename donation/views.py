@@ -67,7 +67,7 @@ def view_donation(request):
     filter = context.apply_filter(donations)
 
     # Add pagination (* donations per page)
-    paginator = Paginator(filter, 4) 
+    paginator = Paginator(filter, 12) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -110,7 +110,7 @@ def donate_food(request):
 
 @role_required('Donor')
 def my_donation(request):
-    donations = Donation.objects.filter(donor=request.user.donor)
+    donations = Donation.objects.filter(donor=request.user.donor).order_by('-created_at')
     return render(request, 'donation/my_donation.html', {'donations': donations})
 
 @role_required('Donor')
